@@ -31,17 +31,15 @@ class JCommentsSecurity
 	public static function checkFlood($ip)
 	{
 		$interval = JCommentsFactory::getConfig()->getInt('flood_time');
-
 		if ($interval > 0) {
 			$db = JFactory::getDbo();
 			$now = JFactory::getDate()->toSql();
 			$query = "SELECT COUNT(*) "
 				. "\nFROM #__jcomments "
 				. "\nWHERE ip = " . $db->Quote($ip)
-				. "\nAND " . $db->Quote($now) . " < DATE_ADD(date, INTERVAL " . $interval . " SECOND)"
+				. "\nAND " . $db->Quote($now) . " < (date + INTERVAL '" . $interval . " SECOND')"
 				. (JCommentsMultilingual::isEnabled() ? "\nAND lang = " . $db->Quote(JCommentsMultilingual::getLanguage()) : '');
 			$db->setQuery($query);
-
 			return ($db->loadResult() == 0) ? 0 : 1;
 		}
 
