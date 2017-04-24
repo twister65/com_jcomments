@@ -904,7 +904,8 @@ class JCommentsAJAX
 		if ($acl->getUserId()) {
 			$query .= ' AND userid = ' . $acl->getUserId();
 		} else {
-			$query .= ' AND userid = 0 AND ip = "' . $ip . '"';
+			//$query .= ' AND userid = 0 AND ip = "' . $ip . '"';
+			$query .= ' AND userid = 0 AND ip = ' . $ip;
 		}
 		$db->setQuery($query);
 		$voted = $db->loadResult();
@@ -926,10 +927,10 @@ class JCommentsAJAX
 						$comment->store();
 
 						$query = "INSERT INTO #__jcomments_votes(commentid,userid,ip,date,value)"
-							. "VALUES('".$comment->id."', '".$acl->getUserId()."','".$db->escape($ip)."', now(), ".$value.")";
+							. "VALUES('.$comment->id.', '.$acl->getUserId().','.$db->escape($ip).', now(), ".$value.")";
 						$db->setQuery($query);
 						$db->execute();
-sleep(3);
+
 						JCommentsEventHelper::trigger('onJCommentsCommentAfterVote', array(&$comment, $value));
 					}
 
