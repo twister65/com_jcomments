@@ -22,7 +22,9 @@
 
 	<uninstall>
 		<sql>
-			<file driver="postgresql" charset="utf8">install/sql/uninstall.postgresql.utf8.sql</file>
+			<file driver="mysql" charset="utf8">install/sql/uninstall.utf8.sql</file>
+			<file driver="mysqli" charset="utf8">install/sql/uninstall.utf8.sql</file>
+			<file driver="postgresql" charset="utf8">install/sql/uninstall.utf8.sql</file>
 		</sql>
 	</uninstall>
 
