@@ -37,7 +37,7 @@ class JCommentsSecurity
 			$query = "SELECT COUNT(*) "
 				. "\nFROM #__jcomments "
 				. "\nWHERE ip = " . $db->Quote($ip)
-				. "\nAND " . $db->Quote($now) . " < (date + INTERVAL '" . $interval . " SECOND')"
+				. "\nAND " . $db->Quote($now) . " < (date + INTERVAL " . $interval . " SECOND)"
 				. (JCommentsMultilingual::isEnabled() ? "\nAND lang = " . $db->Quote(JCommentsMultilingual::getLanguage()) : '');
 			$db->setQuery($query);
 			return ($db->loadResult() == 0) ? 0 : 1;
