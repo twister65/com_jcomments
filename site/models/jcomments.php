@@ -310,10 +310,19 @@ class JCommentsModel
 		$query->select('c.id, c.parent, c.object_id, c.object_group, c.userid, c.name, c.username, c.title, c.comment')
 			->select('c.email, c.homepage, c.date, c.date as datetime, c.ip, c.published, c.deleted, c.checked_out')
 			->select('c.checked_out_time, c.isgood, c.ispoor')
-			->select($votes ? 'v.value as voted' : '1 as voted')
-			->select('case when c.parent = 0 then (SELECT extract(epoch FROM c.date)) else 0 end as threaddate')
-			->select($objectinfo ? "jo.title AS object_title, jo.link AS object_link, jo.access AS object_access" : "'' AS object_title, '' AS object_link, 0 AS object_access, 0 AS object_owner");
-
+			->select($votes ? 'v.value as voted' : '1 as voted');
+		switch ($db->getServerType()) {
+			case 'postgresql' :
+				$query->select('case when c.parent = 0 then (SELECT extract(epoch FROM c.date)) else 0 end as threaddate');
+				break;
+			case 'mysql' :
+			case 'mysqli' :
+				$query->select('case when c.parent = 0 then UNIX_TIMESTAMP(c.date) else 0 end as threaddate');
+				break;
+			default :
+				//TODO
+		}
+		$query->select($objectinfo ? "jo.title AS object_title, jo.link AS object_link, jo.access AS object_access" : "'' AS object_title, '' AS object_link, 0 AS object_access, 0 AS object_owner");
 		$query->from($db->quoteName('#__jcomments') . ' AS c');
 		if ($votes) {
 			$query->join('LEFT', $db->quoteName('#__jcomments_votes') . ' AS v ON c.id = v.commentid' . ($acl->getUserId() ? " AND  v.userid = " . $acl->getUserId() : " AND v.userid = 0 AND v.ip = '" . $acl->getUserIP() . "'"));
