@@ -904,7 +904,6 @@ class JCommentsAJAX
 		if ($acl->getUserId()) {
 			$query .= ' AND userid = ' . $acl->getUserId();
 		} else {
-			//$query .= ' AND userid = 0 AND ip = "' . $ip . '"';
 			$query .= ' AND userid = 0 AND ip = ' . $ip;
 		}
 		$db->setQuery($query);
