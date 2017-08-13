@@ -929,7 +929,7 @@ class JCommentsAJAX
 							. "VALUES('".$comment->id."', '".$acl->getUserId()."','".$db->escape($ip)."', now(), ".$value.")";
 						$db->setQuery($query);
 						$db->execute();
-sleep(3);
+
 						JCommentsEventHelper::trigger('onJCommentsCommentAfterVote', array(&$comment, $value));
 					}
 
