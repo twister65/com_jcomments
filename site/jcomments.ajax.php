@@ -904,7 +904,7 @@ class JCommentsAJAX
 		if ($acl->getUserId()) {
 			$query .= ' AND userid = ' . $acl->getUserId();
 		} else {
-			$query .= ' AND userid = 0 AND ip = "' . $ip . '"';
+			$query .= ' AND userid = 0 AND ip = ' . $ip;
 		}
 		$db->setQuery($query);
 		$voted = $db->loadResult();
@@ -926,7 +926,7 @@ class JCommentsAJAX
 						$comment->store();
 
 						$query = "INSERT INTO #__jcomments_votes(commentid,userid,ip,date,value)"
-							. "VALUES('".$comment->id."', '".$acl->getUserId()."','".$db->escape($ip)."', now(), ".$value.")";
+							. "VALUES('.$comment->id.', '.$acl->getUserId().','.$db->escape($ip).', now(), ".$value.")";
 						$db->setQuery($query);
 						$db->execute();
 
@@ -979,7 +979,7 @@ class JCommentsAJAX
 			}
 		}
 
-		$query = 'SELECT COUNT(*) FROM `#__jcomments_reports` WHERE commentid = ' . $id;
+		$query = "SELECT COUNT(*) FROM #__jcomments_reports WHERE commentid = " . $id;
 		if ($acl->getUserId()) {
 			$query .= ' AND userid = ' . $acl->getUserId();
 		} else {
@@ -991,7 +991,7 @@ class JCommentsAJAX
 		if (!$reported) {
 			$maxReportsPerComment = $config->getInt('reports_per_comment', 1);
 			$maxReportsBeforeUnpublish = $config->getInt('reports_before_unpublish', 0);
-			$db->setQuery('SELECT COUNT(*) FROM `#__jcomments_reports` WHERE commentid = ' . $id);
+			$db->setQuery("SELECT COUNT(*) FROM #__jcomments_reports WHERE commentid = " . $id);
 			$reported = $db->loadResult();
 			if ($reported < $maxReportsPerComment || $maxReportsPerComment == 0) {
 				$comment = JTable::getInstance('Comment', 'JCommentsTable');
