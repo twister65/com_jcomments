@@ -225,16 +225,24 @@ class JCommentsAJAX
 				self::showErrorMessage(JText::_('ERROR_YOUR_COMMENT_IS_TOO_SHORT'), 'comment');
 			} else {
 				if ($acl->check('enable_captcha') == 1) {
-
 					$captchaEngine = $config->get('captcha_engine', 'kcaptcha');
-
 					if ($captchaEngine == 'kcaptcha') {
 						require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
-
 						if (!JCommentsCaptcha::check($values['captcha_refid'])) {
 							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
 							JCommentsCaptcha::destroy();
 							$response->addScript("jcomments.clear('captcha');");
+							return $response;
+						}
+					} else if ($captchaEngine == 'recaptcha') {
+						$post = JRequest::get('post');
+						//$post = JFactory::getApplication()->input->post;
+						JPluginHelper::importPlugin('captcha');
+						$dispatcher = JEventDispatcher::getInstance();
+						$res = $dispatcher->trigger('onCheckAnswer',$post['recaptcha_response_field']);
+						if(!$res[0]){
+							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
+							$response->addScript("Recaptcha.reload()");
 							return $response;
 						}
 					} else {

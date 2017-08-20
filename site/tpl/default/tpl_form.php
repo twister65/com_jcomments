@@ -11,6 +11,9 @@
 
 defined('_JEXEC') or die;
 
+JHtml::_('behavior.keepalive');
+JHtml::_('behavior.formvalidator');
+
 /**
  * Comments form template
  */
@@ -126,11 +129,10 @@ class jtt_tpl_form extends JoomlaTuneTemplate
 		}
 
 		if ($this->getVar('comments-form-captcha', 0) == 1) {
-			$html = $this->getVar('comments-form-captcha-html');
-			if ($html != '') {
-				echo $html;
-			} else {
+			$html = $this->getVar('comments-form-captcha-html','kcaptcha');
+			if ($html == 'kcaptcha') {
 				$link = JCommentsFactory::getLink('captcha');
+
 ?>
 <p>
 	<span>
@@ -139,6 +141,14 @@ class jtt_tpl_form extends JoomlaTuneTemplate
 		<input class="captcha" id="comments-form-captcha" type="text" name="captcha_refid" value="" size="5" tabindex="6" /><br />
 	</span>
 </p>
+<?php
+			} else {
+				JPluginHelper::importPlugin('captcha', "recaptcha");
+				$dispatcher = JEventDispatcher::getInstance();
+				$dispatcher->trigger('onInit','dynamic_recaptcha_1');
+				$output = $dispatcher->trigger('onDisplay', array("recaptcha", 'dynamic_recaptcha_1', 'class="g-recaptcha"'));
+                                echo $output[0];
+?>
 <?php
 			}
 		}
