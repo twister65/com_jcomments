@@ -912,7 +912,7 @@ class JCommentsAJAX
 		if ($acl->getUserId()) {
 			$query .= ' AND userid = ' . $acl->getUserId();
 		} else {
-			$query .= ' AND userid = 0 AND ip = ' . $ip;
+			$query .= ' AND userid = 0 AND ip = ' . $db->Quote($ip);
 		}
 		$db->setQuery($query);
 		$voted = $db->loadResult();
@@ -933,8 +933,25 @@ class JCommentsAJAX
 						}
 						$comment->store();
 
-						$query = "INSERT INTO #__jcomments_votes(commentid,userid,ip,date,value)"
-							. "VALUES('.$comment->id.', '.$acl->getUserId().','.$db->escape($ip).', now(), ".$value.")";
+						$now = JFactory::getDate()->toSql();
+                                                $query = $db->getQuery(true);
+                                                $query->clear()
+                                                        ->insert($db->quotename('#__jcomments_votes'))
+                                                                ->columns(
+                                                                        array(
+                                                                                $db->quoteName('commentid'),
+                                                                                $db->quoteName('userid'),
+                                                                                $db->quoteName('ip'),
+                                                                                $db->quoteName('date'),
+                                                                                $db->quoteName('value')
+                                                                        ))
+                                                                        ->values(
+                                                                                $db->quote($comment->id) . ', '
+                                                                                . $db->quote($acl->getUserId()) . ', '
+                                                                                . $db->quote($db->escape($ip)) . ', '
+                                                                                . $db->quote($now) . ', '
+                                                                                . $db->quote($value)
+                                                                        );
 						$db->setQuery($query);
 						$db->execute();
 
