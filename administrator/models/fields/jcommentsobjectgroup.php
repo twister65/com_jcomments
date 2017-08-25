@@ -39,7 +39,7 @@ class JFormFieldJCommentsObjectGroup extends JFormFieldList
 		$options = array();
 
 		$db = JFactory::getDBO();
-		$db->setQuery('SELECT DISTINCT `element` FROM `#__extensions` WHERE `type` = "component" ORDER BY `element`;');
+		$db->setQuery("SELECT DISTINCT element FROM #__extensions WHERE type = 'component' ORDER BY element;");
 		$components = $db->loadColumn();
 
 		$plugins = JFolder::files(JPATH_SITE . '/components/com_jcomments/plugins/', '\.plugin\.php', true, false);
