@@ -225,16 +225,24 @@ class JCommentsAJAX
 				self::showErrorMessage(JText::_('ERROR_YOUR_COMMENT_IS_TOO_SHORT'), 'comment');
 			} else {
 				if ($acl->check('enable_captcha') == 1) {
-
 					$captchaEngine = $config->get('captcha_engine', 'kcaptcha');
-
 					if ($captchaEngine == 'kcaptcha') {
 						require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
-
 						if (!JCommentsCaptcha::check($values['captcha_refid'])) {
 							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
 							JCommentsCaptcha::destroy();
 							$response->addScript("jcomments.clear('captcha');");
+							return $response;
+						}
+					} else if ($captchaEngine == 'recaptcha') {
+						$post = JRequest::get('post');
+						//$post = JFactory::getApplication()->input->post;
+						JPluginHelper::importPlugin('captcha');
+						$dispatcher = JEventDispatcher::getInstance();
+						$res = $dispatcher->trigger('onCheckAnswer',$post['recaptcha_response_field']);
+						if(!$res[0]){
+							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
+							$response->addScript("Recaptcha.reload()");
 							return $response;
 						}
 					} else {
@@ -904,7 +912,7 @@ class JCommentsAJAX
 		if ($acl->getUserId()) {
 			$query .= ' AND userid = ' . $acl->getUserId();
 		} else {
-			$query .= ' AND userid = 0 AND ip = ' . $db->Quote($ip);
+			$query .= ' AND userid = 0 AND ip = ' . $ip;
 		}
 		$db->setQuery($query);
 		$voted = $db->loadResult();
@@ -925,26 +933,8 @@ class JCommentsAJAX
 						}
 						$comment->store();
 
-						$now = JFactory::getDate()->toSql();
-						$query = $db->getQuery(true);
-						$query->clear()
-							->insert($db->quotename('#__jcomments_votes'))
-								->columns(
-									array(
-										$db->quoteName('commentid'),
-										$db->quoteName('userid'),
-										$db->quoteName('ip'),
-										$db->quoteName('date'),
-										$db->quoteName('value')
-									))
-									->values(
-										$db->quote($comment->id) . ', '
-										. $db->quote($acl->getUserId()) . ', '
-										. $db->quote($db->escape($ip)) . ', '
-										. $db->quote($now) . ', '
-										. $db->quote($value)
-									);
-
+						$query = "INSERT INTO #__jcomments_votes(commentid,userid,ip,date,value)"
+							. "VALUES('.$comment->id.', '.$acl->getUserId().','.$db->escape($ip).', now(), ".$value.")";
 						$db->setQuery($query);
 						$db->execute();
 
