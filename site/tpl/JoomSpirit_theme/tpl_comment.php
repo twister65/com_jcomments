@@ -117,7 +117,7 @@ class jtt_tpl_comment extends JoomlaTuneTemplate
 							}
 							if ($this->getVar('button-quote') == 1) {
 		?>
-		<a href="#" onclick="jcomments.quoteComment(<?php echo $comment->id; ?>); return false;" title="<?php echo JText::_('BUTTON_QUOTE'); ?>" ><span class="icon-quote"> </span></a>
+			<a href="#" onclick="jcomments.quoteComment(<?php echo $comment->id; ?>); return false;"><?php echo JText::_('BUTTON_QUOTE'); ?></a>
 		<?php
 							}
 							if ($this->getVar('button-report') == 1) {
