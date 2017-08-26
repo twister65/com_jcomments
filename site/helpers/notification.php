@@ -333,7 +333,12 @@ class JCommentsNotificationHelper
 					$emails = explode(',', $config->get('notification_email'));
 
 					$db = JFactory::getDbo();
-					$db->setQuery('SELECT * FROM #__users WHERE email IN ("' . implode('", "', $emails) . '")');
+					$query = $db->getQuery(true)
+						->clear()
+						->select('*')
+						->from('#__users')
+						->where($db->quoteName('email') . ' IN ' . $db->quote(implode(', ', $emails)));
+
 					$users = $db->loadObjectList('email');
 
 					foreach ($emails as $email) {
