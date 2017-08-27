@@ -21,11 +21,7 @@
 	</install>
 
 	<uninstall>
-		<sql>
-			<file driver="mysql" charset="utf8">install/sql/uninstall.utf8.sql</file>
-			<file driver="mysqli" charset="utf8">install/sql/uninstall.utf8.sql</file>
-			<file driver="postgresql" charset="utf8">install/sql/uninstall.utf8.sql</file>
-		</sql>
+		<queries />
 	</uninstall>
 
 	<files folder="site">
