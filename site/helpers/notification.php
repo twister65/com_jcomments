@@ -339,6 +339,7 @@ class JCommentsNotificationHelper
 						->from('#__users')
 						->where($db->quoteName('email') . ' IN ' . $db->quote(implode(', ', $emails)));
 
+					$db->setQuery($query);
 					$users = $db->loadObjectList('email');
 
 					foreach ($emails as $email) {
@@ -362,8 +363,10 @@ class JCommentsNotificationHelper
 				$db = JFactory::getDbo();
 
 				$query = $db->getQuery(true);
-				$query->select('DISTINCT js.name, js.email, js.hash, js.userid');
-				$query->from($db->quoteName('#__jcomments_subscriptions') . ' AS js');
+				$fieldlist = $db->qn(array('js.name', 'js.email', 'js.hash', 'js.userid'));
+				$fieldlist[0] = 'distinct ' . $fieldlist[0];
+				$query->select($fieldlist);
+				$query->from($db->quoteName('#__jcomments_subscriptions', 'js'));
 				$query->join('INNER', $db->quoteName('#__jcomments_objects', 'jo') . ' ON ' . 
 						$db->quoteName('js.object_id') . ' = ' . $db->quoteName('jo.object_id') . ' AND ' . 
 					        $db->quoteName('js.object_group') . ' = ' . $db->quoteName('jo.object_group'));
