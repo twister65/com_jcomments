@@ -32,9 +32,10 @@ class JCommentsImportJooComments extends JCommentsImportAdapter
 
 		$query = $db->getQuery(true);
 
-		$query->select('c.*');
-		$query->from($db->quoteName($this->tableName) . ' AS c');
-		$query->order($db->escape('c.publish_date'));
+		$query
+			->select('c.*')
+			->from($db->quoteName($this->tableName,'c'))
+			->order($db->escape('c.publish_date'));
 
 		$db->setQuery($query, $start, $limit);
 		$rows = $db->loadObjectList();

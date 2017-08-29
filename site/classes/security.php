@@ -36,14 +36,13 @@ class JCommentsSecurity
 			$now = JFactory::getDate()->toSql();
 
 			$query = $db->getQuery(true);
-			$query->clear();
-			$query->select("count(*)");
-			$query->from("#__jcomments");
-			$query->where("ip = " . $db->quote($ip));
-			$query->where($db->quote($now) . " < " . $db->quoteName('date') . " + interval " . 
-					$db->quote($interval) . " SECOND");
+			$query
+				->select("count(*)")
+				->from($db->quoteName('#__jcomments'))
+				->where($db->quoteName('ip') . ' = ' . $db->quote($ip))
+				->where($db->quote($now) . " < " . $db->quoteName('date') . " + interval " . $db->quote($interval) . " SECOND");
 			if (JCommentsMultilingual::isEnabled()) {
-				$query->where("lang = " . $db->Quote(JCommentsMultilingual::getLanguage()));
+				$query->where($db->quoteName('lang') . " = " . $db->Quote(JCommentsMultilingual::getLanguage()));
 			}
 
 			$db->setQuery($query);
@@ -80,10 +79,11 @@ class JCommentsSecurity
 			$db = JFactory::getDbo();
 
 			$query = $db->getQuery(true);
-			$query->select('COUNT(*)');
-			$query->from($db->quoteName('#__users'));
-			$query->where($db->quoteName('name') . ' = ' . $db->Quote($db->escape($name, true)), 'OR');
-			$query->where($db->quoteName('username') . ' = ' . $db->Quote($db->escape($name, true)), 'OR');
+			$query
+				->select('COUNT(*)')
+				->from($db->quoteName('#__users'))
+				->where($db->quoteName('name') . ' = ' . $db->quote($name), 'OR')
+				->where($db->quoteName('username') . ' = ' . $db->quote($name), 'OR');
 			$db->setQuery($query);
 
 			return ($db->loadResult() == 0) ? 0 : 1;
@@ -100,9 +100,10 @@ class JCommentsSecurity
 			$db = JFactory::getDbo();
 
 			$query = $db->getQuery(true);
-			$query->select('COUNT(*)');
-			$query->from($db->quoteName('#__users'));
-			$query->where($db->quoteName('email') . ' = ' . $db->Quote($db->escape($email, true)));
+			$query
+				->select('COUNT(*)')
+				->from($db->quoteName('#__users'))
+				->where($db->quoteName('email') . ' = ' . $db->quote($email));
 			$db->setQuery($query);
 
 			return ($db->loadResult() == 0) ? 0 : 1;

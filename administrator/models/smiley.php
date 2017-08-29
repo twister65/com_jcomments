@@ -98,10 +98,11 @@ class JCommentsModelSmiley extends JCommentsModelForm
 	public function saveLegacy()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select("code, image");
-		$query->from($this->_db->quoteName('#__jcomments_smilies'));
-		$query->where('published = 1');
-		$query->order('ordering');
+		$query
+			->select($this->_db->quoteName(array('code', 'image')))
+			->from($this->_db->quoteName('#__jcomments_smilies'))
+			->where($this->_db->quoteName('published') . ' = 1')
+			->order($this->_db->quoteName('ordering'));
 
 		$this->_db->setQuery($query);
 
@@ -118,26 +119,29 @@ class JCommentsModelSmiley extends JCommentsModelForm
 			$values = count($values) ? implode("\n", $values) : '';
 
 			$query = $this->_db->getQuery(true);
-			$query->select("COUNT(*)");
-			$query->from($this->_db->quoteName('#__jcomments_settings'));
-			$query->where('component = ' . $this->_db->quote(''));
-			$query->where('name = ' . $this->_db->quote('smilies'));
+			$query
+				->select(array('COUNT(*)'))
+				->from($this->_db->quoteName('#__jcomments_settings'))
+				->where($this->_db->quoteName('component') . ' = ' . $this->_db->quote(''))
+				->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote('smilies'));
 			$this->_db->setQuery($query);
 
 			$count = $this->_db->loadResult();
 
 			if ($count) {
 				$query = $this->_db->getQuery(true);
-				$query->update($this->_db->quoteName('#__jcomments_settings'));
-				$query->set($this->_db->quoteName('value') . ' = ' . $this->_db->quote($values));
-				$query->where('name = ' . $this->_db->quote('smilies'));
+				$query
+					->update($this->_db->quoteName('#__jcomments_settings'))
+					->set($this->_db->quoteName('value') . ' = ' . $this->_db->quote($values))
+					->where($this->_db->quoteName('name') . ' = ' . $this->_db->quote('smilies'));
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 			} else {
 				$query = $this->_db->getQuery(true);
-				$query->insert($this->_db->quoteName('#__jcomments_settings'));
-				$query->columns(array($this->_db->quoteName('name'), $this->_db->quoteName('value')));
-				$query->values($this->_db->quote('smilies') . ', ' . $this->_db->quote($values));
+				$query
+					->insert($this->_db->quoteName('#__jcomments_settings'))
+					->columns(array($this->_db->quoteName('name'), $this->_db->quoteName('value')))
+					->values($this->_db->quote('smilies') . ', ' . $this->_db->quote($values));
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 			}

@@ -32,11 +32,12 @@ class JCommentsImportK2 extends JCommentsImportAdapter
 
 		$query = $db->getQuery(true);
 
-		$query->select('c.*');
-		$query->from($db->quoteName($this->tableName) . ' AS c');
-		$query->select('u.username as user_username, u.name as user_name, u.email as user_email');
-		$query->join('LEFT', $db->quoteName('#__users') . ' AS u ON c.userid = u.id');
-		$query->order($db->escape('c.commentDate'));
+                $query
+			->select(array('c.*'))
+			->from($db->quoteName($this->tableName,'c'))
+			->select(array($db->quoteName('u.username','user_username'), $db->quoteName('u.name','user_name'), $db->quoteName('u.email','user_email')))
+			->join('LEFT', $db->quoteName('#__users','u') . ' ON ' . $db->quoteName('c.userid') . ' = ' . $db->quoteName('u.id'))
+			->order($db->escape('c.commentDate'));
 
 		$db->setQuery($query, $start, $limit);
 		$rows = $db->loadObjectList();

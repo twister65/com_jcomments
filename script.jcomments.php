@@ -68,11 +68,12 @@ class com_jcommentsInstallerScript
 			$result = $installer->install($path);
 
 			$query = $db->getQuery(true);
-			$query->update($db->quoteName('#__extensions'));
-			$query->set($db->quoteName('enabled') . ' = 1');
-			$query->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'));
-			$query->where($db->quoteName('element') . ' = ' . $db->Quote($name));
-			$query->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
+			$query
+				->update($db->quoteName('#__extensions'))
+				->set($db->quoteName('enabled') . ' = 1')
+				->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'))
+				->where($db->quoteName('element') . ' = ' . $db->Quote($name))
+				->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
 			$db->setQuery($query);
 			$db->execute();
 
@@ -103,8 +104,9 @@ class com_jcommentsInstallerScript
 
 		// Load default settings
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*)');
-		$query->from($db->quoteName('#__jcomments_settings'));
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__jcomments_settings'));
 		$db->setQuery($query);
 		$count = $db->loadResult();
 
@@ -115,8 +117,9 @@ class com_jcommentsInstallerScript
 
 		// Load default custom bbcodes
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*)');
-		$query->from($db->quoteName('#__jcomments_custom_bbcodes'));
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__jcomments_custom_bbcodes'));
 		$db->setQuery($query);
 		$count = $db->loadResult();
 
@@ -127,8 +130,9 @@ class com_jcommentsInstallerScript
 
 		// Load default smilies
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*)');
-		$query->from($db->quoteName('#__jcomments_smilies'));
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__jcomments_smilies'));
 		$db->setQuery($query);
 		$count = $db->loadResult();
 
@@ -180,9 +184,10 @@ class com_jcommentsInstallerScript
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from($db->quoteName('#__jcomments_settings'));
-		$query->where($db->quoteName('name') . ' = ' . $db->Quote('badwords'));
+		$query
+			->select('*')
+			->from($db->quoteName('#__jcomments_settings'))
+			->where($db->quoteName('name') . ' = ' . $db->Quote('badwords'));
 		$db->setQuery($query);
 
 		$rows = $db->loadObjectList();
@@ -192,11 +197,12 @@ class com_jcommentsInstallerScript
 				$value = preg_replace("#,+#", ',', preg_replace("#[\n|\r]+#", ',', $row->value));
 
 				$query = $db->getQuery(true);
-				$query->update($db->quoteName('#__jcomments_settings'));
-				$query->set($db->quoteName('value') . ' = ' . $db->Quote($value));
-				$query->where($db->quoteName('name') . ' = ' . $db->Quote($row->name));
-				$query->where($db->quoteName('lang') . ' = ' . $db->Quote($row->lang));
-				$query->where($db->quoteName('component') . ' = ' . $db->Quote($row->component));
+				$query
+					->update($db->quoteName('#__jcomments_settings'))
+					->set($db->quoteName('value') . ' = ' . $db->Quote($value))
+					->where($db->quoteName('name') . ' = ' . $db->Quote($row->name))
+					->where($db->quoteName('lang') . ' = ' . $db->Quote($row->lang))
+					->where($db->quoteName('component') . ' = ' . $db->Quote($row->component));
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -229,11 +235,12 @@ class com_jcommentsInstallerScript
 			$group = (string)$plugin->attributes()->group;
 
 			$query = $db->getQuery(true);
-			$query->select($db->quoteName('extension_id'));
-			$query->from($db->quoteName('#__extensions'));
-			$query->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'));
-			$query->where($db->quoteName('element') . ' = ' . $db->Quote($name));
-			$query->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
+			$query
+				->select($db->quoteName('extension_id'))
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'))
+				->where($db->quoteName('element') . ' = ' . $db->Quote($name))
+				->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
 			$db->setQuery($query);
 
 			$extensions = $db->loadColumn();
@@ -254,8 +261,9 @@ class com_jcommentsInstallerScript
 
 		if (JFactory::getApplication()->getCfg('caching') != 0) {
 			$query = $db->getQuery(true);
-			$query->select('DISTINCT(' . $db->quoteName('object_group') . ')');
-			$query->from($db->quoteName('#__jcomments'));
+			$query
+				->select('DISTINCT(' . $db->quoteName('object_group') . ')')
+				->from($db->quoteName('#__jcomments'));
 			$db->setQuery($query);
 			$extensions = $db->loadColumn();
 			if (count($extensions)) {
@@ -309,9 +317,10 @@ class com_jcommentsInstallerScript
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		$query->update($db->quoteName('#__extensions'));
-		$query->set($db->quoteName('name') . ' = ' . $db->Quote('com_jcomments'));
-		$query->where($db->quoteName('element') . ' = ' . $db->Quote('com_jcomments'));
+		$query
+			->update($db->quoteName('#__extensions'))
+			->set($db->quoteName('name') . ' = ' . $db->Quote('com_jcomments'))
+			->where($db->quoteName('element') . ' = ' . $db->Quote('com_jcomments'));
 		$db->setQuery($query);
 		$db->execute();
 	}
@@ -324,11 +333,12 @@ class com_jcommentsInstallerScript
 
 		if (count($groups)) {
 			$query = $db->getQuery(true);
-			$query->select('*');
-			$query->from($db->quoteName('#__jcomments_settings'));
-			$query->where($db->quoteName('name') . ' != ' . $db->Quote('badwords'));
-			$query->where($db->quoteName('name') . ' != ' . $db->Quote('forbidden_names'));
-			$query->where($db->quoteName('name') . ' != ' . $db->Quote('smilies_path'));
+			$query
+				->select('*')
+				->from($db->quoteName('#__jcomments_settings'))
+				->where($db->quoteName('name') . ' != ' . $db->Quote('badwords'))
+				->where($db->quoteName('name') . ' != ' . $db->Quote('forbidden_names'))
+				->where($db->quoteName('name') . ' != ' . $db->Quote('smilies_path'));
 
 			$where = array();
 			foreach ($groups as $group) {
@@ -360,11 +370,12 @@ class com_jcommentsInstallerScript
 				$row->value = implode(',', $values);
 
 				$query = $db->getQuery(true);
-				$query->update($db->quoteName('#__jcomments_settings'));
-				$query->set($db->quoteName('value') . ' = ' . $db->Quote($row->value));
-				$query->where($db->quoteName('component') . ' = ' . $db->Quote($row->component));
-				$query->where($db->quoteName('lang') . ' = ' . $db->Quote($row->lang));
-				$query->where($db->quoteName('name') . ' = ' . $db->Quote($row->name));
+				$query
+					->update($db->quoteName('#__jcomments_settings'))
+					->set($db->quoteName('value') . ' = ' . $db->Quote($row->value))
+					->where($db->quoteName('component') . ' = ' . $db->Quote($row->component))
+					->where($db->quoteName('lang') . ' = ' . $db->Quote($row->lang))
+					->where($db->quoteName('name') . ' = ' . $db->Quote($row->name));
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -379,8 +390,9 @@ class com_jcommentsInstallerScript
 
 		if (count($groups)) {
 			$query = $db->getQuery(true);
-			$query->select('*');
-			$query->from($db->quoteName('#__jcomments_custom_bbcodes'));
+			$query
+				->select('*')
+				->from($db->quoteName('#__jcomments_custom_bbcodes'));
 
 			$where = array();
 			foreach ($groups as $group) {
@@ -412,9 +424,10 @@ class com_jcommentsInstallerScript
 				$row->button_acl = implode(',', $values);
 
 				$query = $db->getQuery(true);
-				$query->update($db->quoteName('#__jcomments_custom_bbcodes'));
-				$query->set($db->quoteName('button_acl') . ' = ' . $db->Quote($row->button_acl));
-				$query->where($db->quoteName('name') . ' = ' . $db->Quote($row->name));
+				$query
+					->update($db->quoteName('#__jcomments_custom_bbcodes'))
+					->set($db->quoteName('button_acl') . ' = ' . $db->Quote($row->button_acl))
+					->where($db->quoteName('name') . ' = ' . $db->Quote($row->name));
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -429,9 +442,10 @@ class com_jcommentsInstallerScript
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*)');
-		$query->from($db->quoteName('#__usergroups'));
-		$query->where($db->quoteName('id') . ' = ' . (int) $guest_usergroup);
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__usergroups'))
+			->where($db->quoteName('id') . ' = ' . (int) $guest_usergroup);
 		$db->setQuery($query);
 
 		$count = $db->loadResult();
@@ -440,9 +454,10 @@ class com_jcommentsInstallerScript
 			$params->set('guest_usergroup', '1');
 
 			$query = $db->getQuery(true);
-			$query->update($db->quoteName('#__extensions'));
-			$query->set($db->quoteName('params') . '= ' . $db->quote((string)$params));
-			$query->where($db->quoteName('element') . ' = ' . $db->quote('com_users'));
+			$query
+				->update($db->quoteName('#__extensions'))
+				->set($db->quoteName('params') . '= ' . $db->quote((string)$params))
+				->where($db->quoteName('element') . ' = ' . $db->quote('com_users'));
 			$db->setQuery($query);
 			$db->execute();
 
@@ -456,11 +471,14 @@ class com_jcommentsInstallerScript
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
-		$query->select('a.*, COUNT(DISTINCT b.id) AS level');
-		$query->from($db->quoteName('#__usergroups') . ' AS a');
-		$query->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
-		$query->group('a.id, a.title, a.lft, a.rgt, a.parent_id');
-		$query->order('a.lft ASC');
+		$query
+			->select(array('a.*', 'COUNT(DISTINCT ' . $db->quoteName('b.id') . ') AS level'))
+			->from($db->quoteName('#__usergroups','a'))
+			->join('LEFT', $db->quoteName('#__usergroups','b') . ' ON ' . 
+					$db->quoteName('a.lft') . ' > ' . $db->quoteName('b.lft') . ' AND ' .
+					$db->quoteName('a.rgt') . ' < ' . $db->quoteName('b.rgt'))
+			->group($db->quoteName(array('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')))
+			->order($db->quoteName('a.lft') . ' ASC');
 		$db->setQuery($query);
 		$groups = $db->loadObjectList();
 

@@ -104,11 +104,13 @@ class JCommentsACL
 					$db = JFactory::getDbo();
 					// get highest group
 					$query = $db->getQuery(true);
-					$query->select('a.id');
-					$query->from('#__user_usergroup_map AS map');
-					$query->leftJoin('#__usergroups AS a ON a.id = map.group_id');
-					$query->where('map.user_id = ' . (int)$user->id);
-					$query->order('a.lft desc');
+					$query
+						->select('a.id')
+						->from($db->quoteName('#__user_usergroup_map','map'))
+						->leftJoin($db->quoteName('#__usergroups','a') . ' ON ' .
+							   $db->quoteName('a.id') . ' = ' . $db->quoteName('map.group_id'))
+						->where($db->quoteName('map.user_id') . ' = ' . (int)$user->id)
+						->order($db->quoteName('a.lft') . ' desc');
 					$db->setQuery($query, 0, 1);
 
 					$group = $db->loadResult();

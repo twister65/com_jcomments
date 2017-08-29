@@ -168,10 +168,11 @@ class JCommentsTableComment extends JTable
 		if ($result) {
 			// process nested comments (threaded mode)
 			$query = $this->_db->getQuery(true);
-			$query->select('id, parent');
-			$query->from($this->_db->quoteName('#__jcomments'));
-			$query->where($this->_db->quoteName('object_group') . ' = ' . $this->_db->Quote($this->object_group));
-			$query->where($this->_db->quoteName('object_id') . ' = ' . $this->object_id);
+			$query
+				->select($this->_$db->quoteName(array('id', 'parent')))
+				->from($this->_db->quoteName('#__jcomments'))
+				->where($this->_db->quoteName('object_group') . ' = ' . $this->_db->Quote($this->object_group)) . ' AND ' .
+					$this->_db->quoteName('object_id') . ' = ' . $this->object_id;
 
 			$this->_db->setQuery($query);
 			$rows = $this->_db->loadObjectList();
@@ -184,26 +185,41 @@ class JCommentsTableComment extends JTable
 			unset($rows);
 
 			if (count($descendants)) {
-				$query = "DELETE FROM #__jcomments WHERE id IN (" . implode(',', $descendants) . ')';
+				$query
+					->clear()
+					->delete($this->_db->quoteName('#__jcomments'))
+					->where($this->_db->quoteName('id') . ' IN (' . implode(',', $descendants) . ')');
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 
 				$descendants[] = $id;
-				$query = "DELETE FROM #__jcomments_votes WHERE commentid IN (" . implode(',', $descendants) . ')';
+				$query
+					->clear()
+					->delete($this->_db->quoteName('#__jcomments_votes'))
+					->where($this->_db->quoteName('commentid') . ' IN (' . implode(',', $descendants) . ')');
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 
-				$query = "DELETE FROM #__jcomments_reports WHERE commentid IN (" . implode(',', $descendants) . ')';
+				$query
+					->clear()
+					->delete($this->_db->quoteName('#__jcomments_reports'))
+					->where($this->_db->quoteName('commentid') . ' IN (' . implode(',', $descendants) . ')');
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 			} else {
 				// delete comment's vote info
-				$query = "DELETE FROM #__jcomments_votes WHERE commentid = " . $id;
+				$query
+					->clear()
+				        ->delete($this->_db->quoteName('#__jcomments_votes'))
+					->where($this->_db->quoteName('commentid') . ' = ' . $id);
 				$this->_db->setQuery($query);
 				$this->_db->excute();
 
 				// delete comment's reports info
-				$query = "DELETE FROM #__jcomments_reports WHERE commentid = " . $id;
+				$query
+					->clear()
+				        ->delete($this->_db->quoteName('#__jcomments_reports'))
+					->where($this->_db->quoteName('commentid') . ' = ' . $id);
 				$this->_db->setQuery($query);
 				$this->_db->execute();
 			}

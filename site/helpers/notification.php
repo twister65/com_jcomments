@@ -70,9 +70,10 @@ class JCommentsNotificationHelper
 			$db = JFactory::getDbo();
 
 			$query = $db->getQuery(true);
-			$query->select($db->quoteName('id'));
-			$query->from($db->quoteName('#__jcomments_mailq'));
-			$query->order($db->quoteName('priority') . ' desc');
+			$query
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__jcomments_mailq'))
+				->order($db->quoteName('priority') . ' desc');
 			$db->setQuery($query, 0, $limit);
 
 			$items = $db->loadObjectList('id');
@@ -125,10 +126,11 @@ class JCommentsNotificationHelper
 			$db = JFactory::getDbo();
 
 			$query = $db->getQuery(true);
-			$query->update($db->quoteName('#__jcomments_mailq'));
-			$query->set($db->quoteName('session_id') . ' = ' . $db->Quote(self::getSessionId()));
-			$query->where($db->quoteName('session_id') . ' IS NULL');
-			$query->where($db->quoteName('id') . ' IN (' . implode(',', $keys) . ')');
+			$query
+				->update($db->quoteName('#__jcomments_mailq'))
+				->set($db->quoteName('session_id') . ' = ' . $db->Quote(self::getSessionId()))
+				->where($db->quoteName('session_id') . ' IS NULL')
+				->where($db->quoteName('id') . ' IN (' . implode(',', $keys) . ')');
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -333,11 +335,11 @@ class JCommentsNotificationHelper
 					$emails = explode(',', $config->get('notification_email'));
 
 					$db = JFactory::getDbo();
-					$query = $db->getQuery(true)
-						->clear()
+					$query = $db->getQuery(true);
+					$query
 						->select('*')
-						->from('#__users')
-						->where($db->quoteName('email') . ' IN ' . $db->quote(implode(', ', $emails)));
+						->from($db->quoteName('#__users'))
+						->where($db->quoteName('email') . ' IN (' . $db->quote(implode(', ', $emails)) . ')');
 
 					$db->setQuery($query);
 					$users = $db->loadObjectList('email');
@@ -363,19 +365,21 @@ class JCommentsNotificationHelper
 				$db = JFactory::getDbo();
 
 				$query = $db->getQuery(true);
-				$fieldlist = $db->qn(array('js.name', 'js.email', 'js.hash', 'js.userid'));
-				$fieldlist[0] = 'distinct ' . $fieldlist[0];
-				$query->select($fieldlist);
-				$query->from($db->quoteName('#__jcomments_subscriptions', 'js'));
-				$query->join('INNER', $db->quoteName('#__jcomments_objects', 'jo') . ' ON ' . 
-						$db->quoteName('js.object_id') . ' = ' . $db->quoteName('jo.object_id') . ' AND ' . 
-					        $db->quoteName('js.object_group') . ' = ' . $db->quoteName('jo.object_group'));
-				$query->where($db->quoteName('js.object_group') . ' = ' . $db->Quote($object_group));
-				$query->where($db->quoteName('js.object_id') . ' = ' . intval($object_id));
-				$query->where($db->quoteName('js.published') . ' = ' . 1);
+				$fieldlist = $db->qn($db->quoteName(array('js.name', 'js.email', 'js.hash', 'js.userid')));
+				$fieldlist[0] = 'DISTINCT ' . $fieldlist[0];
+				$query
+					->select($fieldlist)
+					->from($db->quoteName('#__jcomments_subscriptions', 'js'))
+					->join('INNER', $db->quoteName('#__jcomments_objects', 'jo') . ' ON ' . 
+							$db->quoteName('js.object_id') . ' = ' . $db->quoteName('jo.object_id') . ' AND ' . 
+					        	$db->quoteName('js.object_group') . ' = ' . $db->quoteName('jo.object_group'))
+					->where($db->quoteName('js.object_group') . ' = ' . $db->Quote($object_group))
+					->where($db->quoteName('js.object_id') . ' = ' . intval($object_id))
+					->where($db->quoteName('js.published') . ' = 1');
 				if (JCommentsMultilingual::isEnabled()) {
-					$query->where($db->quoteName('js.lang') . ' = ' . $db->Quote($lang));
-					$query->where($db->quoteName('jo.lang') . ' = ' . $db->Quote($lang));
+					$query
+						->where($db->quoteName('js.lang') . ' = ' . $db->Quote($lang))
+						->where($db->quoteName('jo.lang') . ' = ' . $db->Quote($lang));
 				}
 
 				$db->setQuery($query);

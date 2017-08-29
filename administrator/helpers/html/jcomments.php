@@ -134,11 +134,14 @@ abstract class JHtmlJComments
 
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select('a.*, COUNT(DISTINCT b.id) AS level');
-		$query->from($db->quoteName('#__usergroups') . ' AS a');
-		$query->join('LEFT', $db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt');
-		$query->group('a.id, a.title, a.lft, a.rgt, a.parent_id');
-		$query->order('a.lft ASC');
+		$query
+			->select(array('a.*', 'COUNT(DISTINCT b.id) AS level'))
+			->from($db->quoteName('#__usergroups','a'))
+			->join('LEFT', $db->quoteName('#__usergroups', 'b') . ' ON (' .
+				$db->quoteName('a.lft') . ' > ' . $db->quoteName('b.lft') . ' AND ' .
+				$db->quoteName('a.rgt') . ' < ' . $db->quoteName('b.rgt') . ')')
+			->group($db->quoteName(array('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')))
+			->order($db->quoteName('a.lft') . ' ASC');
 		$db->setQuery($query);
 		$groups = $db->loadObjectList();
 

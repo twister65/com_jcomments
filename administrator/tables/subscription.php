@@ -52,9 +52,10 @@ class JCommentsTableSubscription extends JTable
 			$db = JFactory::getDBO();
 
 			$query = $db->getQuery(true);
-			$query->select('*');
-			$query->from($db->quoteName('#__users'));
-			$query->where($db->quoteName('email') . ' = ' . $db->Quote($db->escape($this->email, true)));
+			$query
+				->select('*')
+				->from($db->quoteName('#__users'))
+				->where($db->quoteName('email') . ' = ' . $db->Quote($this->email));
 			$db->setQuery($query);
 
 			$users = $db->loadObjectList();

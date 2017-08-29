@@ -37,16 +37,21 @@ class JCommentsModelBlacklists extends JCommentsModelList
 	protected function getListQuery()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select("jb.*");
-		$query->from($this->_db->quoteName('#__jcomments_blacklist') . ' AS jb');
+		$query
+			->select('jb.*')
+			->from($this->_db->quoteName('#__jcomments_blacklist','jb'));
 
 		// Join over the users
-		$query->select('u.name');
-		$query->join('LEFT', $this->_db->quoteName('#__users') . ' AS u ON u.id = jb.created_by');
+		$query
+			->select($this->_db->quoteName('u.name'))
+			->join('LEFT', $this->_db->quoteName('#__users','u') . ' ON ' .
+				$this->_db->quoteName('u.id') . ' = ' . $this->_db->quoteName('jb.created_by'));
 
 		// Join over the users
-		$query->select('u2.name AS editor');
-		$query->join('LEFT', $this->_db->quoteName('#__users') . ' AS u2 ON u.id = jb.checked_out');
+		$query
+			->select($this->_db->quoteName('u2.name','editor'))
+			->join('LEFT', $this->_db->quoteName('#__users','u2') . ' ON ' .
+				$this->_db->quoteName('u.id') . ' = ' . $this->_db->quoteName('jb.checked_out'));
 
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {

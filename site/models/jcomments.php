@@ -119,7 +119,12 @@ class JCommentsModel
 		if (is_array($ids)) {
 			if (count($ids)) {
 				$db = JFactory::getDbo();
-				$db->setQuery("SELECT DISTINCT object_group, object_id FROM #__jcomments WHERE parent IN (" . implode(',', $ids) . ")");
+				$query = $db->getQuery(true);
+				$query
+					->select('DISTINCT ' . $db->quoteName(array('object_group', 'object_id')))
+					->from($db->quoteName('#__jcomments'))
+					->where($db->quoteName('parent') . ' IN (' . implode(',', $ids) . ')');
+				$db->setQuery($query);
 				$objects = $db->loadObjectList();
 
 				if (count($objects)) {
@@ -128,10 +133,12 @@ class JCommentsModel
 					$descendants = array();
 
 					foreach ($objects as $o) {
-						$query = "SELECT id, parent"
-								. "\nFROM #__jcomments"
-								. "\nWHERE `object_group` = " . $db->Quote($o->object_group)
-								. "\nAND `object_id` = " . $db->Quote($o->object_id);
+						$query
+							->clear()
+							->select($db->quoteName(array('id', 'parent')))
+							->from($db->quoteName('#__jcomments'))
+							->where($db->quoteName('object_group') . ' = ' . $db->Quote($o->object_group))
+							->where($db->quoteName('object_id') . ' = ' . $db->Quote($o->object_id));
 						$db->setQuery($query);
 						$comments = $db->loadObjectList();
 
@@ -149,13 +156,25 @@ class JCommentsModel
 
 				$ids = implode(',', $ids);
 
-				$db->setQuery("DELETE FROM #__jcomments WHERE id IN (" . $ids . ")");
+				$query
+					->clear()
+					->delete($db->quoteName('#__jcomments'))
+					->where($db->quoteName('id') . ' IN (' . $ids . ')');
+				$db->setQuery($query);
 				$db->execute();
 
-				$db->setQuery("DELETE FROM #__jcomments_votes WHERE commentid IN (" . $ids . ")");
+				$query
+					->clear()
+					->delete($db->quoteName('#__jcomments_votes'))
+					->where($db->quoteName('commentid') . ' IN (' . $ids . ')');
+				$db->setQuery($query);
 				$db->execute();
 
-				$db->setQuery("DELETE FROM #__jcomments_reports WHERE commentid IN (" . $ids . ")");
+				$query
+					->clear()
+					->delete($db->quoteName('#__jcomments_reports'))
+					->where($db->quoteName('commentid') . ' IN (' . $ids . ')');
+				$db->setQuery($query);
 				$db->execute();
 			}
 		}
@@ -167,18 +186,23 @@ class JCommentsModel
 		$oids = is_array($object_id) ? implode(',', $object_id) : $object_id;
 
 		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
-		$query = "SELECT id FROM #__jcomments "
-				. "\n WHERE object_group = " . $db->Quote($object_group)
-				. "\n AND object_id IN (" . $oids . ")";
+		$query
+			->select($db->quoteName('id'))
+			->from($db->quoteName('#__jcomments'))
+			->where($db->quoteName('object_group') . ' = ' . $db->Quote($object_group))
+			->where($db->quoteName('object_id') . ' IN (' . $oids . ')');
 		$db->setQuery($query);
 		$cids = $db->loadColumn();
 
 		JCommentsModel::deleteCommentsByIds($cids);
 
-		$query = "DELETE FROM #__jcomments_objects "
-			. " WHERE object_group = " . $db->Quote($object_group)
-			. " AND object_id = " . $db->Quote($object_id);
+		$query
+			->clear()
+			->delete($db->quoteName('#__jcomments_objects'))
+			->where($db->quoteName('object_group') . ' = ' . $db->Quote($object_group))
+			->where($db->quoteName('object_id') . ' = ' . $db->Quote($object_id));
 		$db->setQuery($query);
 		$db->execute();
 
@@ -188,6 +212,7 @@ class JCommentsModel
 	protected static function _getCommentsCountQuery(&$options)
 	{
 		$db = JFactory::getDbo();
+		$query = $db->getQuery(true);
 
 		$object_id = @$options['object_id'];
 		$object_group = @$options['object_group'];
@@ -200,27 +225,27 @@ class JCommentsModel
 		$where = array();
 
 		if (!empty($object_id)) {
-			$where[] = "c.object_id = " . (int) $object_id;
+			$where[] = $db->quoteName('c.object_id') . ' = ' . (int)$object_id;
 		}
 
 		if (!empty($object_group)) {
-			$where[] = "c.object_group = " . $db->Quote($object_group);
+			$where[] = $db->quoteName('c.object_group') . ' = ' . $db->Quote($object_group);
 		}
 
 		if ($parent !== null) {
-			$where[] = "c.parent = " . (int) $parent;
+			$where[] = $db->quoteName('c.parent') . ' = ' . (int)$parent;
 		}
 
 		if ($level !== null) {
-			$where[] = "c.level = " . (int) $level;
+			$where[] = $db->quoteName('c.level') . ' = ' . (int)$level;
 		}
 
 		if ($published !== null) {
-			$where[] = "c.published = " . (int) $published;
+			$where[] = $db->quoteName('c.published') . ' = ' . (int)$published;
 		}
 
 		if ($userid !== null) {
-			$where[] = "c.userid = " . (int) $userid;
+			$where[] = $db->quoteName('c.userid') . ' = ' . (int)$userid;
 		}
 
 		if ($filter != "") {
@@ -228,12 +253,15 @@ class JCommentsModel
 		}
 
 		if (JCommentsMultilingual::isEnabled()) {
-			$where[] = "c.lang = '" . JCommentsMultilingual::getLanguage() . "'";
+			$where[] = $db->quoteName('c.lang') . ' = ' . $db->quote(JCommentsMultilingual::getLanguage());
 		}
 
-		$query = "SELECT count(*)"
-				. "\nFROM #__jcomments AS c"
-				. (count($where) ? ("\nWHERE " . implode(' AND ', $where)) : "");
+		$query
+			->select('count(*)')
+			->from($db->quoteName('#__jcomments','c'));
+		if (count($where)) {
+			$query->where(implode(' AND ', $where));
+		}
 
 		return $query;
 	}
@@ -261,44 +289,45 @@ class JCommentsModel
 		$where = array();
 
 		if (!empty($object_id)) {
-			$where[] = "c.object_id = " . $object_id;
+			$where[] = $db->quoteName('c.object_id') . ' = ' . $object_id;
 		}
 
 		if (!empty($object_group)) {
 			if (is_array($object_group)) {
-				$where[] = "(c.object_group = '" . implode("' OR c.object_group = '", $object_group) . "')";
+				$where[] = '(' . $db->quoteName('c.object_group') . ' = ' . 
+					implode(' OR ' . $db->quoteName('c.object_group') . ' = ', $db->quote($object_group)) . ')';
 			} else {
-				$where[] = "c.object_group = " . $db->Quote($object_group);
+				$where[] = $db->quoteName('c.object_group') . ' = ' . $db->Quote($object_group);
 			}
 		}
 
 		if ($parent !== null) {
-			$where[] = "c.parent = " . $parent;
+			$where[] = $db->quoteName('c.parent') . ' = ' . $parent;
 		}
 
 		if ($level !== null) {
-			$where[] = "c.level = " . (int) $level;
+			$where[] = $db->quoteName('c.level') . ' = ' . (int) $level;
 		}
 
 		if ($published !== null) {
-			$where[] = "c.published = " . $published;
+			$where[] = $db->quoteName('c.published') . ' = ' . $published;
 		}
 
 		if ($userid !== null) {
-			$where[] = "c.userid = " . $userid;
+			$where[] = $db->quoteName('c.userid') . ' = ' . $userid;
 		}
 
 		if (JCommentsMultilingual::isEnabled()) {
 			$language = isset($options['lang']) ? $options['lang'] : JCommentsMultilingual::getLanguage();
-			$where[] = "c.lang = " . $db->Quote($language);
+			$where[] = $db->quoteName('c.lang') . ' = ' . $db->Quote($language);
 		}
 
 		if ($objectinfo && isset($options['access'])) {
 			if (is_array($options['access'])) {
 				$access = implode(',', $options['access']);
-				$where[] = "jo.access IN (" . $access . ")";
+				$where[] = $db->quoteName('jo.access') . ' IN (' . $access . ')';
 			} else {
-				$where[] = "jo.access <= " . (int) $options['access'];
+				$where[] = $db->quoteName('jo.access') . ' <= ' . (int)$options['access'];
 			}
 		}
 
@@ -307,28 +336,37 @@ class JCommentsModel
 		}
 
 		$query = $db->getQuery(true);
-		$query->select('c.id, c.parent, c.object_id, c.object_group, c.userid, c.name, c.username, c.title, c.comment')
-			->select('c.email, c.homepage, c.date, c.date as datetime, c.ip, c.published, c.deleted, c.checked_out')
-			->select('c.checked_out_time, c.isgood, c.ispoor')
-			->select($votes ? 'v.value as voted' : '1 as voted');
+		$selection = array('c.id', 'c.parent', 'c.object_id', 'c.object_group', 'c.userid', 'c.name', 
+			           'c.username', 'c.title', 'c.comment', 'c.email', 'c.homepage', 'c.date', 'c.date as datetime', 'c.ip',
+				   'c.published', 'c.deleted', 'c.checked_out','c.checked_out_time', 'c.isgood', 'c.ispoor');
+		array_push($selection, $votes ? 'v.value as voted' : '1 as voted');
+		$query->select($db->quoteName($selection));
 		switch ($db->getServerType()) {
 			case 'postgresql' :
-				$query->select('case when c.parent = 0 then (SELECT extract(epoch FROM c.date)) else 0 end as threaddate');
+				$query->select('case when ' . $db->quoteName('c.parent') .' = 0 then (SELECT extract(epoch FROM ' . $db->quoteName('c.date') . ')) else 0 end as threaddate');
 				break;
 			case 'mysql' :
 			case 'mysqli' :
 				$query->select('case when c.parent = 0 then UNIX_TIMESTAMP(c.date) else 0 end as threaddate');
 				break;
 			default :
-				//TODO
+				//Microsoft SQL server
 		}
-		$query->select($objectinfo ? "jo.title AS object_title, jo.link AS object_link, jo.access AS object_access" : "'' AS object_title, '' AS object_link, 0 AS object_access, 0 AS object_owner");
-		$query->from($db->quoteName('#__jcomments') . ' AS c');
+		$query->select($objectinfo ? array($db->quoteName('jo.title','object_title') , $db->quoteName('jo.link','object_link'), $db->quoteName('jo.access','object_access')) :
+					     array($db->quoteName('','object_title'), $db->quoteName('','object_link'), '0 AS object_access', '0 AS object_owner'));
+		$query->from($db->quoteName('#__jcomments','c'));
 		if ($votes) {
-			$query->join('LEFT', $db->quoteName('#__jcomments_votes') . ' AS v ON c.id = v.commentid' . ($acl->getUserId() ? " AND  v.userid = " . $acl->getUserId() : " AND v.userid = 0 AND v.ip = '" . $acl->getUserIP() . "'"));
+			$query->join('LEFT', $db->quoteName('#__jcomments_votes','v') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('v.commentid') . 
+					($acl->getUserId() ? (" AND " . $db->quoteName('v.userid') . " = " . $acl->getUserId()) : 
+						     	     (" AND " . $db->quoteName('v.userid') . " = 0 AND " . $db->quoteName('v.ip') . " = " . $db->quote($acl->getUserIP()))
+					)
+				    );
 		}
 		if ($objectinfo) {
-			$query->join('LEFT', $db->quoteName('#__jcomments_objects') . ' AS jo ON jo.object_id = c.object_id AND jo.object_group = c.object_group AND jo.lang=c.lang');
+			$query->join('LEFT', $db->quoteName('#__jcomments_objects','jo') . ' ON ' . 
+				$db->quoteName('jo.object_id') . ' = ' . $db->quoteName('c.object_id') . ' AND ' .
+				$db->quoteName('jo.object_group') . ' = ' . $db->quoteName('c.object_group') . ' AND ' .
+				$db->quoteName('jo.lang') . ' = ' . $db->quoteName('c.lang'));
 		}
 		if (count($where)) {
 			$query->where(implode(' AND ', $where));

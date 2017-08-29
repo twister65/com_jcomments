@@ -44,55 +44,67 @@ class JCommentsModelComments extends JCommentsModelList
 		// TODO: filter deleted comments
 		$query = $this->_db->getQuery(true);
 
-		$reportsSubQuery = ', (SELECT COUNT(*) FROM ' . $this->_db->quoteName('#__jcomments_reports') . ' AS r  WHERE r.commentid = jc.id) AS reports';
+		$reportsSubQuery = ', (SELECT COUNT(*) FROM ' . $this->_db->quoteName('#__jcomments_reports', 'r') . 
+			' WHERE ' . $this->_db->quoteName('r.commentid') . ' = ' . $this->_db->quoteName('jc.id') . ') AS reports';
 
-		$query->select('jc.*' . $reportsSubQuery);
-		$query->from($this->_db->quoteName('#__jcomments') . ' AS jc');
+		$query
+			->select('jc.*' . $reportsSubQuery)
+			->from($this->_db->quoteName('#__jcomments','jc'));
 
 		// Join over the objects
-		$query->select('jo.title as object_title, jo.link as object_link');
-		$query->join('LEFT', $this->_db->quoteName('#__jcomments_objects') . ' AS jo ON jo.object_id = jc.object_id AND jo.object_group = jc.object_group AND jo.lang = jc.lang');
+		$query
+			->select(array($this->_db->quoteName('jo.title','object_title'), $this->_db->quoteName('jo.link','object_link')))
+			->join('LEFT', $this->_db->quoteName('#__jcomments_objects','jo') . ' ON ' .
+				$this->_db->quoteName('jo.object_id') . ' = ' . $this->_db->quoteName('jc.object_id') . ' AND ' .
+				$this->_db->quoteName('jo.object_group') . ' = ' . $this->_db->quoteName('jc.object_group') . ' AND ' .
+				$this->_db->quoteName('jo.lang') . ' = ' . $this->_db->quoteName('jc.lang'));
 
 		// Join over the users
-		$query->select('u.name AS editor');
-		$query->join('LEFT', $this->_db->quoteName('#__users') . ' AS u ON u.id = jc.checked_out');
+		$query
+			->select($this->_db->quoteName('u.name','editor'))
+			->join('LEFT', $this->_db->quoteName('#__users','u') . ' ON ' .
+				$this->_db->quoteName('u.id') . ' = ' . $this->_db->quoteName('jc.checked_out'));
 
 		// Filter by published state
 		$state = $this->getState('filter.state');
 		if (is_numeric($state)) {
 			if ($state == 2) {
-				$query->where('EXISTS (SELECT * FROM ' . $this->_db->quoteName('#__jcomments_reports') . ' AS jr WHERE jr.commentid = jc.id)');
+				$query->where('EXISTS (SELECT * FROM ' . $this->_db->quoteName('#__jcomments_reports','jr') . ' WHERE ' .
+					$this->_db->quoteName('jr.commentid') . ' = ' . $this->_db->quoteName('jc.id') . ')');
 			} else {
-				$query->where('jc.published = ' . (int)$state);
+				$query->where($this->_db->quoteName('jc.published') . ' = ' . (int)$state);
 			}
 		}
 
 		// Filter by component (object group)
 		$object_group = $this->getState('filter.object_group');
 		if ($object_group != '') {
-			$query->where('jc.object_group = ' . $this->_db->Quote($this->_db->escape($object_group)));
+			$query->where($this->_db->quoteName('jc.object_group') . ' = ' . $this->_db->Quote($object_group));
 		}
 
 		// Filter by language
 		$language = $this->getState('filter.language');
 		if ($language != '') {
-			$query->where('jc.lang = ' . $this->_db->Quote($this->_db->escape($language)));
+			$query->where($this->_db->quoteName('jc.lang') . ' = ' . $this->_db->Quote($language));
 		}
 
 		// Filter by search in name or email
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			if (stripos($search, 'id:') === 0) {
-				$query->where('jc.id = ' . (int)substr($search, 3));
+				$query->where($this->_db->quoteName('jc.id') . ' = ' . (int)substr($search, 3));
 			} else if (stripos($search, 'user:') === 0) {
 				$escaped = $this->_db->Quote('%' . $this->_db->escape(JString::substr($search, 5), true) . '%');
-				$query->where('(jc.email LIKE ' . $escaped . ' OR jc.name LIKE ' . $escaped . ' OR jc.username LIKE ' . $escaped . ')');
+				$query->where('(' . $this->_db->quoteName('jc.email') . ' LIKE ' . $escaped . ' OR ' . 
+						    $this->_db->quoteName('jc.name') .' LIKE ' . $escaped . ' OR ' . 
+						    $this->_db->quoteName('jc.username') . ' LIKE ' . $escaped . ')');
 			} else if (stripos($search, 'object:') === 0) {
 				$escaped = $this->_db->Quote('%' . $this->_db->escape(JString::substr($search, 7), true) . '%');
-				$query->where('jo.title LIKE ' . $escaped);
+				$query->where($this->_db->quoteName('jo.title') . ' LIKE ' . $escaped);
 			} else {
 				$search = $this->_db->Quote('%' . $this->_db->escape($search, true) . '%');
-				$query->where('(jc.comment LIKE ' . $search . ' OR jc.title LIKE ' . $search . ')');
+				$query->where('(' . $this->_db->quoteName('jc.comment') . ' LIKE ' . $search . ' OR ' .
+						    $this->_db->quoteName('jc.title') . ' LIKE ' . $search . ')');
 			}
 		}
 
@@ -106,9 +118,10 @@ class JCommentsModelComments extends JCommentsModelList
 	public function getFilterLanguages()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('DISTINCT(lang) AS name');
-		$query->from('#__jcomments');
-		$query->order('lang ASC');
+		$query
+			->select('DISTINCT(' . $this->_db->quoteName('lang') . ') AS name')
+			->from($this->_db->quoteName('#__jcomments'))
+			->order($this->_db->quoteName('lang') . ' ASC');
 		$this->_db->setQuery($query);
 		$rows = $this->_db->loadObjectList();
 
@@ -118,9 +131,10 @@ class JCommentsModelComments extends JCommentsModelList
 	public function getFilterObjectGroups()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('DISTINCT(object_group) AS name');
-		$query->from('#__jcomments');
-		$query->order('object_group ASC');
+		$query
+			->select('DISTINCT(' . $this->_db->quoteName('object_group') . ') AS name')
+			->from($this->_db->quoteName('#__jcomments'))
+			->order($this->_db->quoteName('object_group') . ' ASC');
 		$this->_db->setQuery($query);
 		$rows = $this->_db->loadObjectList();
 
