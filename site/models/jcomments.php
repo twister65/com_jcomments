@@ -340,7 +340,7 @@ class JCommentsModel
 			           'c.username', 'c.title', 'c.comment', 'c.email', 'c.homepage', 'c.date', 'c.date as datetime', 'c.ip',
 				   'c.published', 'c.deleted', 'c.checked_out','c.checked_out_time', 'c.isgood', 'c.ispoor');
 		array_push($selection, $votes ? 'v.value as voted' : '1 as voted');
-		$query->select($db->quoteName($selection));
+		$query->select($selection);
 		switch ($db->getServerType()) {
 			case 'postgresql' :
 				$query->select('case when ' . $db->quoteName('c.parent') .' = 0 then (SELECT extract(epoch FROM ' . $db->quoteName('c.date') . ')) else 0 end as threaddate');
@@ -353,7 +353,7 @@ class JCommentsModel
 				//Microsoft SQL server
 		}
 		$query->select($objectinfo ? array($db->quoteName('jo.title','object_title') , $db->quoteName('jo.link','object_link'), $db->quoteName('jo.access','object_access')) :
-					     array($db->quoteName('','object_title'), $db->quoteName('','object_link'), '0 AS object_access', '0 AS object_owner'));
+					     array("'' AS object_title", "'' AS object_link", "0 AS object_access", "0 AS object_owner"));
 		$query->from($db->quoteName('#__jcomments','c'));
 		if ($votes) {
 			$query->join('LEFT', $db->quoteName('#__jcomments_votes','v') . ' ON ' . $db->quoteName('c.id') . ' = ' . $db->quoteName('v.commentid') . 
