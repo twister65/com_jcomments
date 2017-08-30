@@ -347,7 +347,7 @@ class JCommentsAJAX
 					->where($db->quoteName('parent') . ' = ' . $comment->parent)
 					->where($db->quoteName('object_group') . ' = ' . $db->Quote($comment->object_group));
 				if(JCommentsMultilingual::isEnabled()) {
-					$query->->where($db->quoteName('lang') . ' = ' . $db->Quote(JCommentsMultilingual::getLanguage()));
+					$query->where($db->quoteName('lang') . ' = ' . $db->Quote(JCommentsMultilingual::getLanguage()));
 				}
 
 				$db->setQuery($query);
@@ -1186,7 +1186,7 @@ class JCommentsAJAX
 				->clear()
 				->select('COUNT(DISTINCT ' . $db->quoteName(array('c.object_id','c.object_group','c.lang')) . ')')
 				->from($db->quoteName('#__jcomments','c'));
-			if(count($where) {
+			if(count($where)) {
 				$query->where(implode(' AND ', $where));
 			}
 
