@@ -336,11 +336,12 @@ class JCommentsModel
 		}
 
 		$query = $db->getQuery(true);
-		$selection = array('c.id', 'c.parent', 'c.object_id', 'c.object_group', 'c.userid', 'c.name', 
-			           'c.username', 'c.title', 'c.comment', 'c.email', 'c.homepage', 'c.date', 'c.date as datetime', 'c.ip',
-				   'c.published', 'c.deleted', 'c.checked_out','c.checked_out_time', 'c.isgood', 'c.ispoor');
-		array_push($selection, $votes ? 'v.value as voted' : '1 as voted');
-		$query->select($selection);
+		$query
+			->select($db->quoteName(array('c.id', 'c.parent', 'c.object_id', 'c.object_group', 'c.userid', 'c.name',
+						'c.username', 'c.title', 'c.comment', 'c.email', 'c.homepage', 'c.date')))
+			->select($db->quoteName('c.date','datetime'))
+			->select($db->quoteName(array('c.ip','c.published', 'c.deleted', 'c.checked_out','c.checked_out_time', 'c.isgood', 'c.ispoor')))
+			->select($votes ? $db->quoteName('v.value','voted') : '1 as voted');
 		switch ($db->getServerType()) {
 			case 'postgresql' :
 				$query->select('case when ' . $db->quoteName('c.parent') .' = 0 then (SELECT extract(epoch FROM ' . $db->quoteName('c.date') . ')) else 0 end as threaddate');
