@@ -365,7 +365,7 @@ class JCommentsNotificationHelper
 				$db = JFactory::getDbo();
 
 				$query = $db->getQuery(true);
-				$fieldlist = $db->qn($db->quoteName(array('js.name', 'js.email', 'js.hash', 'js.userid')));
+				$fieldlist = $db->qn(array('js.name', 'js.email', 'js.hash', 'js.userid'));
 				$fieldlist[0] = 'DISTINCT ' . $fieldlist[0];
 				$query
 					->select($fieldlist)
