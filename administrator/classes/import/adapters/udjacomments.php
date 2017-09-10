@@ -34,11 +34,15 @@ class JCommentsImportUdjaComments extends JCommentsImportAdapter
 
 		$query = $db->getQuery(true);
 
-		$query->select('c.*');
-		$query->from($db->quoteName($this->tableName) . ' AS c');
-		$query->select('u.id as user_id, u.username as user_username, u.name as user_name, u.email as user_email');
-		$query->join('LEFT', $db->quoteName('#__users') . ' AS u ON u.name = c.full_name AND u.email = c.email');
-		$query->order($db->escape('c.time_added'));
+		$query
+			->select('c.*')
+			->from($db->quoteName($this->tableName,'c'))
+			->select(array($db->quoteName('u.id','user_id'), $db->quoteName('u.username','user_username'), 
+					$db->quoteName('u.name','user_name'), $db->quoteName('u.email','user_email')))
+					->join('LEFT', $db->quoteName('#__users','u') . ' ON ' . 
+						$db->quoteName('u.name') . ' = ' . $db->quoteName('c.full_name') . ' AND ' .
+						$db->quoteName('u.email') . ' = ' . $db->quoteName('c.email'))
+			->order($db->escape('c.time_added'));
 
 		$db->setQuery($query, $start, $limit);
 		$rows = $db->loadObjectList();

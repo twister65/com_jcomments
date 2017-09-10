@@ -131,10 +131,11 @@ class JCommentsCfg
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from($db->quoteName('#__jcomments_settings'));
-		$query->where($db->quoteName('lang') . ' = ' . $db->Quote($db->escape($language, true)));
-		$query->where($db->quoteName('component') . ' = ' . $db->Quote($db->escape($component, true)));
+		$query
+			->select('*')
+			->from($db->quoteName('#__jcomments_settings'))
+			->where($db->quoteName('lang') . ' = ' . $db->quote($language))
+			->where($db->quoteName('component') . ' = ' . $db->quote($component));
 		$db->setQuery($query);
 
 		$data = $db->loadObjectList();

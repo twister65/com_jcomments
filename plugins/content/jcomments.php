@@ -351,10 +351,10 @@ class plgContentJComments extends JPlugin
 
 			$db = JFactory::getDbo();
 			$query = $db->getQuery(true);
-			$query->delete();
-			$query->from($db->quoteName('#__jcomments_subscriptions'));
-			$query->where($db->quoteName('object_id') . ' = ' . (int)$data->id);
-			$query->where($db->quoteName('object_group') . ' = ' . $db->Quote('com_content'));
+			$query
+				->delete($db->quoteName('#__jcomments_subscriptions'))
+				->where($db->quoteName('object_id') . ' = ' . (int)$data->id)
+				->where($db->quoteName('object_group') . ' = ' . $db->Quote('com_content'));
 			$db->setQuery($query);
 			$db->execute();
 		}

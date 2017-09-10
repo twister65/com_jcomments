@@ -31,10 +31,11 @@ class JCommentsModelSettings extends JCommentsModelForm
 		$language = $this->getState($this->getName() . '.language');
 
 		$query = $this->_db->getQuery(true);
-		$query->select("*");
-		$query->from($this->_db->quoteName('#__jcomments_settings'));
-		$query->where($this->_db->quoteName('component') . '=' . $this->_db->quote(''));
-		$query->where($this->_db->quoteName('lang') . '=' . $this->_db->quote($language));
+		$query
+			->select(array('*'))
+			->from($this->_db->quoteName('#__jcomments_settings'))
+			->where($this->_db->quoteName('component') . '=' . $this->_db->quote(''))
+			->where($this->_db->quoteName('lang') . '=' . $this->_db->quote($language));
 
 		$this->_db->setQuery($query);
 		$params = $this->_db->loadObjectList();
@@ -104,20 +105,22 @@ class JCommentsModelSettings extends JCommentsModelForm
 
 		if (!isset($languages)) {
 			$query = $this->_db->getQuery(true);
-			$query->select('enabled');
-			$query->from($this->_db->quoteName('#__extensions'));
-			$query->where($this->_db->quoteName('type') . ' = ' . $this->_db->quote('plugin'));
-			$query->where($this->_db->quoteName('folder') . ' = ' . $this->_db->quote('system'));
-			$query->where($this->_db->quoteName('element') . ' = ' . $this->_db->quote('languagefilter'));
+			$query
+				->select($this->_db->quoteName(array('enabled')))
+				->from($this->_db->quoteName('#__extensions'))
+				->where($this->_db->quoteName('type') . ' = ' . $this->_db->quote('plugin'))
+				->where($this->_db->quoteName('folder') . ' = ' . $this->_db->quote('system'))
+				->where($this->_db->quoteName('element') . ' = ' . $this->_db->quote('languagefilter'));
 			$this->_db->setQuery($query);
 
 			$enabled = $this->_db->loadResult();
 
 			if ($enabled) {
 				$query = $this->_db->getQuery(true);
-				$query->select('*');
-				$query->from($this->_db->quoteName('#__languages'));
-				$query->where($this->_db->quoteName('published') . '= 1');
+				$query
+					->select(array('*'))
+					->from($this->_db->quoteName('#__languages'))
+					->where($this->_db->quoteName('published') . '= 1');
 				$this->_db->setQuery($query);
 
 				$languages = $this->_db->loadObjectList();
@@ -133,11 +136,18 @@ class JCommentsModelSettings extends JCommentsModelForm
 	public function getUserGroups()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('a.id AS value, a.title AS text, COUNT(DISTINCT b.id) AS level, a.parent_id')
-			->from('#__usergroups AS a')
-			->leftJoin($this->_db->quoteName('#__usergroups') . ' AS b ON a.lft > b.lft AND a.rgt < b.rgt')
-			->group('a.id, a.title, a.lft, a.rgt, a.parent_id')
-			->order('a.lft ASC');
+		$query
+			->select($this->_db->quoteName('a.id','value'))
+			->select($this->_db->quoteName('a.title','text'))
+			->select('COUNT(DISTINCT ' . $this->_db->quoteName('b.id') . ') AS level')
+			->select($this->_db->quoteName('a.parent_id'))
+			->from($this->_db->quoteName('#__usergroups', 'a'))
+			->leftJoin($this->_db->quoteName('#__usergroups', 'b') . ' ON (' . 
+				   $this->_db->quoteName('a.lft') . ' > ' . $this->_db->quoteName('b.lft') . ' AND ' .
+				   $this->_db->quoteName('a.rgt') . ' < ' . $this->_db->quoteName('b.rgt') . ')')
+			->group($this->_db->quoteName(array('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')))
+			->order($this->_db->quoteName('a.lft') . ' ASC');
+		 
 		$this->_db->setQuery($query);
 		$options = $this->_db->loadObjectList();
 
@@ -243,10 +253,11 @@ class JCommentsModelSettings extends JCommentsModelForm
 			}
 
 			$query = $this->_db->getQuery(true);
-			$query->select($this->_db->quoteName('name'));
-			$query->from($this->_db->quoteName('#__jcomments_settings'));
-			$query->where($this->_db->quoteName('component') . '=' . $this->_db->quote(''));
-			$query->where($this->_db->quoteName('lang') . '=' . $this->_db->quote($language));
+			$query
+				->select($this->_db->quoteName(array('name')))
+				->from($this->_db->quoteName('#__jcomments_settings'))
+				->where($this->_db->quoteName('component') . '=' . $this->_db->quote(''))
+				->where($this->_db->quoteName('lang') . '=' . $this->_db->quote($language));
 
 			$this->_db->setQuery($query);
 			$params = $this->_db->loadColumn();
@@ -274,11 +285,12 @@ class JCommentsModelSettings extends JCommentsModelForm
 
 					if (in_array($key, $params)) {
 						$query = $this->_db->getQuery(true);
-						$query->update($this->_db->quoteName('#__jcomments_settings'));
-						$query->set($this->_db->quoteName('value') . '=' . $this->_db->quote($value));
-						$query->where($this->_db->quoteName('component') . '=' . $this->_db->quote(''));
-						$query->where($this->_db->quoteName('lang') . '=' . $this->_db->quote($language));
-						$query->where($this->_db->quoteName('name') . '=' . $this->_db->quote($key));
+						$query
+							->update($this->_db->quoteName('#__jcomments_settings'))
+							->set($this->_db->quoteName('value') . '=' . $this->_db->quote($value))
+							->where($this->_db->quoteName('component') . '=' . $this->_db->quote(''))
+							->where($this->_db->quoteName('lang') . '=' . $this->_db->quote($language))
+							->where($this->_db->quoteName('name') . '=' . $this->_db->quote($key));
 
 						$this->_db->setQuery($query);
 						try
@@ -292,7 +304,7 @@ class JCommentsModelSettings extends JCommentsModelForm
 						}
 					} else {
 						$query = $this->_db->getQuery(true);
-						$query->clear()
+						$query
 							->insert($this->_db->quoteName("#__jcomments_settings"))
 							->columns(
 								array(
@@ -302,10 +314,10 @@ class JCommentsModelSettings extends JCommentsModelForm
 									$this->_db->quoteName('name')
 								))
 							->values(
-									$this->_db->quote($value) . ', '
-									. $this->_db->quote('') . ', '
-									. $this->_db->quote($language) . ', '
-									. $this->_db->quote($key)
+									$this->_db->quote($value) . ', ' .
+									$this->_db->quote('') . ', ' .
+									$this->_db->quote($language) . ', ' .
+									$this->_db->quote($key)
 							);
 
 						$this->_db->setQuery($query);

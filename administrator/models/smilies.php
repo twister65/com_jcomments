@@ -37,24 +37,28 @@ class JCommentsModelSmilies extends JCommentsModelList
 	protected function getListQuery()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select("js.*");
-		$query->from($this->_db->quoteName('#__jcomments_smilies') . ' AS js');
+		$query
+			->select("js.*")
+			->from($this->_db->quoteName('#__jcomments_smilies','js'));
 
 		// Join over the users
-		$query->select('u.name AS editor');
-		$query->join('LEFT', $this->_db->quoteName('#__users') . ' AS u ON u.id = js.checked_out');
+		$query
+			->select($this->_db->quoteName('u.name','editor'))
+			->join('LEFT', $this->_db->quoteName('#__users','u') . ' ON ' .
+				$this->_db->quoteName('u.id') . ' = ' . $this->_db->quoteName('js.checked_out'));
 
 		// Filter by published state
 		$state = $this->getState('filter.state');
 		if (is_numeric($state)) {
-			$query->where('js.published = ' . (int)$state);
+			$query->where($this->_db->quoteName('js.published') . ' = ' . (int)$state);
 		}
 
 		// Filter by search in name or email
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			$search = $this->_db->Quote('%' . $this->_db->escape($search, true) . '%');
-			$query->where('(js.name LIKE ' . $search . ' OR js.code LIKE ' . $search . ')');
+			$query->where('(' . $this->_db->quoteName('js.name') . ' LIKE ' . $search . ' OR ' .
+					    $this->_db->quoteName('js.code') . ' LIKE ' . $search . ')');
 		}
 
 		$ordering = $this->state->get('list.ordering', 'js.ordering');

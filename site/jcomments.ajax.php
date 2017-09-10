@@ -335,17 +335,21 @@ class JCommentsAJAX
 				$comment->published = $acl->check('autopublish');
 				$comment->date = JFactory::getDate()->toSql();
 
-				$query = "SELECT COUNT(*) "
-						. "\nFROM #__jcomments "
-						. "\nWHERE comment = '" . $db->escape($comment->comment) . "'"
-						. "\n  AND ip = '" . $db->escape($comment->ip) . "'"
-						. "\n  AND name = '" . $db->escape($comment->name) . "'"
-						. "\n  AND userid = '" . $comment->userid . "'"
-						. "\n  AND object_id = " . $comment->object_id
-						. "\n  AND parent = " . $comment->parent
-						. "\n  AND object_group = '" . $db->escape($comment->object_group) . "'"
-						. (JCommentsMultilingual::isEnabled() ? "\nAND lang = '" . JCommentsMultilingual::getLanguage() . "'" : "")
-						;
+				$query = $db->getQuery(true);
+				$query
+					->select('COUNT(*)')
+					->from($db->quoteName('#__jcomments'))
+					->where($db->quoteName('comment') . ' = ' . $db->Quote($comment->comment))
+					->where($db->quoteName('ip') . ' = ' . $db->Quote($comment->ip))
+					->where($db->quoteName('name') . ' = ' . $db->Quote($comment->name))
+					->where($db->quoteName('userid') . ' = ' . $comment->userid)
+					->where($db->quoteName('object_id') . ' = ' . $comment->object_id)
+					->where($db->quoteName('parent') . ' = ' . $comment->parent)
+					->where($db->quoteName('object_group') . ' = ' . $db->Quote($comment->object_group));
+				if(JCommentsMultilingual::isEnabled()) {
+					$query->where($db->quoteName('lang') . ' = ' . $db->Quote(JCommentsMultilingual::getLanguage()));
+				}
+
 				$db->setQuery($query);
 				$found = $db->loadResult();
 
@@ -907,12 +911,17 @@ class JCommentsAJAX
 		$value = ($value > 0) ? 1 : -1;
 		$ip = $acl->getUserIP();
 
-		$query = "SELECT COUNT(*) FROM #__jcomments_votes WHERE commentid = " . $id;
+		$query = $db->getQuery(true);
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__jcomments_votes'))
+			->where($db->quoteName('commentid') . ' = ' . $id);
 
 		if ($acl->getUserId()) {
-			$query .= ' AND userid = ' . $acl->getUserId();
+			$query->where($db->quoteName('userid') . ' = ' . $acl->getUserId());
 		} else {
-			$query .= ' AND userid = 0 AND ip = ' . $db->Quote($ip);
+			$query->where($db->quoteName('userid') . ' = 0 AND ' .
+				      $db->quoteName('ip') . ' = ' . $db->Quote($ip));
 		}
 		$db->setQuery($query);
 		$voted = $db->loadResult();
@@ -935,8 +944,8 @@ class JCommentsAJAX
 
 						$now = JFactory::getDate()->toSql();
                                                 $query = $db->getQuery(true);
-                                                $query->clear()
-                                                        ->insert($db->quotename('#__jcomments_votes'))
+                                                $query
+                                                        ->insert($db->quoteName('#__jcomments_votes'))
                                                                 ->columns(
                                                                         array(
                                                                                 $db->quoteName('commentid'),
@@ -946,11 +955,11 @@ class JCommentsAJAX
                                                                                 $db->quoteName('value')
                                                                         ))
                                                                         ->values(
-                                                                                $db->quote($comment->id) . ', '
-                                                                                . $db->quote($acl->getUserId()) . ', '
-                                                                                . $db->quote($db->escape($ip)) . ', '
-                                                                                . $db->quote($now) . ', '
-                                                                                . $db->quote($value)
+                                                                                $db->quote($comment->id) . ', ' .
+                                                                                $db->quote($acl->getUserId()) . ', ' .
+                                                                                $db->quote($ip) . ', ' .
+                                                                                $db->quote($now) . ', ' .
+                                                                                $value
                                                                         );
 						$db->setQuery($query);
 						$db->execute();
@@ -1004,19 +1013,29 @@ class JCommentsAJAX
 			}
 		}
 
-		$query = "SELECT COUNT(*) FROM #__jcomments_reports WHERE commentid = " . $id;
+		$query = $db->getQuery(true);
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__jcomments_reports'))
+			->where($db->quoteName('commentid') . ' = ' . $id);
 		if ($acl->getUserId()) {
-			$query .= ' AND userid = ' . $acl->getUserId();
+			$query->where($db->quoteName('userid') . ' = ' . $acl->getUserId());
 		} else {
-			$query .= ' AND userid = 0 AND ip = ' . $db->Quote($ip);
+			$query->where($db->quoteName('userid') . ' = 0 AND ' .
+					$db->quoteName('ip') . ' = ' . $db->Quote($ip));
 		}
-		$db->setQuery( $query );
+		$db->setQuery($query);
 		$reported = $db->loadResult();
 
 		if (!$reported) {
 			$maxReportsPerComment = $config->getInt('reports_per_comment', 1);
 			$maxReportsBeforeUnpublish = $config->getInt('reports_before_unpublish', 0);
-			$db->setQuery("SELECT COUNT(*) FROM #__jcomments_reports WHERE commentid = " . $id);
+			$query
+				->clear()
+				->select('COUNT(*)')
+				->from($db->quoteName('#__jcomments_reports'))
+				->where($db->quoteName('commentid') . ' = ' . $id);
+			$db->setQuery($query);
 			$reported = $db->loadResult();
 			if ($reported < $maxReportsPerComment || $maxReportsPerComment == 0) {
 				$comment = JTable::getInstance('Comment', 'JCommentsTable');
@@ -1139,11 +1158,15 @@ class JCommentsAJAX
 
 		if ($hash === md5($app->getCfg('secret'))) {
 			$db = JFactory::getDBO();
+			$query = $db->getQuery(true);
 
 			if ($step == 0) {
 				if ($app->getCfg('caching') != 0) {
 					// clean cache for all object groups
-					$db->setQuery('SELECT DISTINCT object_group FROM #__jcomments_objects');
+					$query
+						->select('DISTINCT ' . $db->quoteName('object_group'))
+						->from($db->quoteName('#__jcomments_objects'));
+					$db->setQuery($query);
 					$rows = $db->loadColumn();
 					foreach ($rows as $row) {
 						$cache = JFactory::getCache('com_jcomments_objects_'.strtolower($row));
@@ -1151,18 +1174,21 @@ class JCommentsAJAX
 					}
 				}
 
-				$db->setQuery('TRUNCATE TABLE #__jcomments_objects');
+				$db->setQuery('TRUNCATE TABLE ' . $db->quoteName('#__jcomments_objects'));
 				$db->execute();
 			}
 
 			$where = array();
-			$where[] = 'IFNULL(c.lang, "") <> ""';
+			$where[] = 'IFNULL(' . $db->quoteName('c.lang') . ', "") <> ""';
 
 			// count objects without information
-			$query = "SELECT COUNT(DISTINCT c.object_id, c.object_group, c.lang)"	
-				. " FROM #__jcomments AS c"
-				. (count($where) ? ("\nWHERE " . implode(' AND ', $where)) : "")
-				;
+			$query
+				->clear()
+				->select('COUNT(DISTINCT ' . $db->quoteName(array('c.object_id','c.object_group','c.lang')) . ')')
+				->from($db->quoteName('#__jcomments','c'));
+			if(count($where)) {
+				$query->where(implode(' AND ', $where));
+			}
 
 			$db->setQuery($query);
 			$total = (int) $db->loadResult();
@@ -1170,13 +1196,16 @@ class JCommentsAJAX
 			$count = 0;
 
 			if ($total > 0) {
-				$where[] = 'NOT EXISTS (SELECT o.id FROM #__jcomments_objects AS o WHERE o.object_id = c.object_id AND o.object_group = c.object_group AND o.lang = c.lang)';
+				$where[] = 'NOT EXISTS (SELECT ' . $db->quoteName('o.id') . ' FROM ' . $db->quoteName('#__jcomments_objects','o') . ' WHERE ' .
+						$db->quoteName('o.object_id') . ' = ' . $db->quoteName('c.object_id') . ' AND ' .
+						$db->quoteName('o.object_group') . ' = ' . $db->quoteName('c.object_group') . ' AND ' .
+						$db->quoteName('o.lang') . ' = ' . $db->quoteName('c.lang') . ')';
 
 				// get list of first objects without information
-				$query = "SELECT DISTINCT c.object_id, c.object_group, c.lang"	
-					. " FROM #__jcomments AS c"
+				$query = "SELECT DISTINCT " . $db->quoteName(array('c.object_id', 'c.object_group', 'c.lang'))	
+					. " FROM " . $db->quoteName('#__jcomments','c')
 					. (count($where) ? ("\nWHERE " . implode(' AND ', $where)) : "")
-					. " ORDER BY c.object_group, c.lang"
+					. " ORDER BY " . $db->quoteName(array('c.object_group', 'c.lang'))
 					;
 
 				$db->setQuery($query, 0, $count);
@@ -1200,7 +1229,7 @@ class JCommentsAJAX
 				}
 
 				if ($i > 0) {
-					$db->setQuery("SELECT COUNT(*) FROM #__jcomments_objects");
+					$db->setQuery("SELECT COUNT(*) FROM " . $db->quoteName('#__jcomments_objects'));
 					$count = (int) $db->loadResult();
 				}
 		

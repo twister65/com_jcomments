@@ -38,8 +38,9 @@ class JCommentsModelMailq extends JCommentsModelList
 	protected function getListQuery()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select("*");
-		$query->from($this->_db->quoteName('#__jcomments_mailq'));
+		$query
+			->select(array('*'))
+			->from($this->_db->quoteName('#__jcomments_mailq'));
 
 		// Filter by search in name or email
 		$search = $this->getState('filter.search');
@@ -59,8 +60,7 @@ class JCommentsModelMailq extends JCommentsModelList
 	public function purge()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->delete();
-		$query->from($this->_db->quoteName('#__jcomments_mailq'));
+		$query->delete($this->_db->quoteName('#__jcomments_mailq'));
 		$this->_db->setQuery($query);
 		$this->_db->execute();
 

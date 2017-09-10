@@ -38,43 +38,51 @@ class JCommentsModelSubscriptions extends JCommentsModelList
 	protected function getListQuery()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select("js.*");
-		$query->from($this->_db->quoteName('#__jcomments_subscriptions') . ' AS js');
+		$query
+			->select(array('js.*'))
+			->from($this->_db->quoteName('#__jcomments_subscriptions','js'));
 
 		// Join over the objects
-		$query->select('jo.title AS object_title, jo.link AS object_link');
-		$query->join('LEFT', $this->_db->quoteName('#__jcomments_objects') . ' AS jo ON jo.object_id = js.object_id AND jo.object_group = js.object_group AND jo.lang = js.lang');
+		$query
+			->select(array($this->_db->quoteName('jo.title','object_title'), $this->_db->quoteName('jo.link','object_link')))
+			->join('LEFT', $this->_db->quoteName('#__jcomments_objects','jo') . ' ON ' .
+				$this->_db->quoteName('jo.object_id') . ' = ' . $this->_db->quoteName('js.object_id') . ' AND ' .
+				$this->_db->quoteName('jo.object_group') . ' = ' . $this->_db->quoteName('js.object_group') . ' AND ' .
+				$this->_db->quoteName('jo.lang') . ' = ' . $this->_db->quoteName('js.lang'));
 
 		// Join over the users
-		$query->select('u.name AS editor');
-		$query->join('LEFT', $this->_db->quoteName('#__users') . ' AS u ON u.id = js.checked_out');
+		$query
+			->select($this->_db->quoteName('u.name','editor'))
+			->join('LEFT', $this->_db->quoteName('#__users','u') . ' ON ' .
+				$this->_db->quoteName('u.id') . ' = ' . $this->_db->quoteName('js.checked_out'));
 
 		// Filter by published state
 		$state = $this->getState('filter.state');
 		if (is_numeric($state)) {
-			$query->where('js.published = ' . (int)$state);
+			$query->where($this->_db->quoteName('js.published') . ' = ' . (int)$state);
 		}
 
 		// Filter by component (object group)
 		$object_group = $this->getState('filter.object_group');
 		if ($object_group != '') {
-			$query->where('js.object_group = ' . $this->_db->Quote($this->_db->escape($object_group)));
+			$query->where($this->_db->quoteName('js.object_group') . ' = ' . $this->_db->Quote($this->_db->escape($object_group)));
 		}
 
 		// Filter by language
 		$language = $this->getState('filter.language');
 		if ($language != '') {
-			$query->where('js.lang = ' . $this->_db->Quote($this->_db->escape($language)));
+			$query->where($this->_db->quoteName('js.lang') . ' = ' . $this->_db->Quote($this->_db->escape($language)));
 		}
 
 		// Filter by search in name or email
 		$search = $this->getState('filter.search');
 		if (!empty($search)) {
 			if (stripos($search, 'id:') === 0) {
-				$query->where('js.id = ' . (int)substr($search, 3));
+				$query->where($this->_db->quoteName('js.id') . ' = ' . (int)substr($search, 3));
 			} else {
 				$search = $this->_db->Quote('%' . $this->_db->escape($search, true) . '%');
-				$query->where('(js.name LIKE ' . $search . ' OR js.email LIKE ' . $search . ')');
+				$query->where('(' . $this->_db->quoteName('js.name') . ' LIKE ' . $search . ' OR ' . 
+						$this->_db->quoteName('js.email') . ' LIKE ' . $search . ')');
 			}
 		}
 
@@ -88,9 +96,10 @@ class JCommentsModelSubscriptions extends JCommentsModelList
 	public function getFilterLanguages()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('DISTINCT(lang) AS name');
-		$query->from('#__jcomments_subscriptions');
-		$query->order('lang ASC');
+		$query
+			->select('DISTINCT(' . $this->_db->quoteName('lang') . ') AS name')
+			->from($this->_db->quoteName('#__jcomments_subscriptions'))
+			->order($this->_db->quoteName('lang') . ' ASC');
 		$this->_db->setQuery($query);
 		$rows = $this->_db->loadObjectList();
 
@@ -100,9 +109,10 @@ class JCommentsModelSubscriptions extends JCommentsModelList
 	public function getFilterObjectGroups()
 	{
 		$query = $this->_db->getQuery(true);
-		$query->select('DISTINCT(object_group) AS name');
-		$query->from('#__jcomments_subscriptions');
-		$query->order('object_group ASC');
+		$query
+			->select('DISTINCT(' . $this->_db->quoteName('object_group') . ') AS name')
+			->from($this->_db->quoteName('#__jcomments_subscriptions'))
+			->order($this->_db->quoteName('object_group') . ' ASC');
 		$this->_db->setQuery($query);
 		$rows = $this->_db->loadObjectList();
 

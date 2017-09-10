@@ -84,13 +84,14 @@ class JCommentsModelImport extends JCommentsModelLegacy
 		$db = JFactory::getDbo();
 
 		$query = $db->getQuery(true);
-		$query->update(array($db->quoteName('#__jcomments') . ' AS c1', $db->quoteName('#__jcomments') . ' AS c2'));
-		$query->set('c1.parent = c2.id');
-		$query->where('c1.source = c2.source');
-		$query->where('c1.id <> c2.id');
-		$query->where('c1.parent <> 0');
-		$query->where('c1.parent = c2.source_id');
-		$query->where('c1.source = ' . $db->quote($source));
+		$query
+			->update(array($db->quoteName('#__jcomments','c1'), $db->quoteName('#__jcomments','c2')))
+			->set($db->quoteName('c1.parent') . ' = ' . $db->quoteName('c2.id'))
+			->where($db->quoteName('c1.source') . ' = ' . $db->quoteName('c2.source'))
+			->where($db->quoteName('c1.id') . ' <> ' . $db->quoteName('c2.id'))
+			->where($db->quoteName('c1.parent') . ' <> 0')
+			->where($db->quoteName('c1.parent') . ' = ' . $db->quoteName('c2.source_id'))
+			->where($db->quoteName('c1.source') . ' = ' . $db->quote($source));
 
 		$db->setQuery($query);
 		$db->execute();
@@ -101,9 +102,10 @@ class JCommentsModelImport extends JCommentsModelLegacy
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		$query->select('COUNT(*)');
-		$query->from($db->quoteName('#__jcomments'));
-		$query->where($db->quoteName('source') . '=' . $db->quote($source));
+		$query
+			->select('COUNT(*)')
+			->from($db->quoteName('#__jcomments'))
+			->where($db->quoteName('source') . '=' . $db->quote($source));
 		$db->setQuery($query);
 		$result = $db->loadResult();
 
@@ -115,16 +117,16 @@ class JCommentsModelImport extends JCommentsModelLegacy
 		$db = JFactory::getDBO();
 
 		$query = $db->getQuery(true);
-		$query->delete();
-		$query->from($db->quoteName('#__jcomments'));
-		$query->where($db->quoteName('source') . '=' . $db->quote($source));
+		$query
+			->delete($db->quoteName('#__jcomments'))
+			->where($db->quoteName('source') . '=' . $db->quote($source));
 		$db->setQuery($query);
 		$db->execute();
 
 		$query = $db->getQuery(true);
-		$query->delete();
-		$query->from($db->quoteName('#__jcomments_subscriptions'));
-		$query->where($db->quoteName('source') . '=' . $db->quote($source));
+		$query
+			->delete($db->quoteName('#__jcomments_subscriptions'))
+			->where($db->quoteName('source') . '=' . $db->quote($source));
 		$db->setQuery($query);
 		$db->execute();
 	}

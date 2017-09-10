@@ -73,9 +73,9 @@ class plgSearchJComments extends JPlugin
 			switch ($phrase) {
 				case 'exact':
 					$text = $db->Quote('%' . $db->escape($text, true) . '%', false);
-					$wheres2[] = "LOWER(c.name) LIKE " . $text;
-					$wheres2[] = "LOWER(c.comment) LIKE " . $text;
-					$wheres2[] = "LOWER(c.title) LIKE " . $text;
+					$wheres2[] = 'LOWER(' . $db->quoteName('c.name') . ') LIKE ' . $text;
+					$wheres2[] = 'LOWER(' . $db->quoteName('c.comment') . ') LIKE ' . $text;
+					$wheres2[] = 'LOWER(' . $db->quoteName('c.title') . ') LIKE ' . $text;
 					$where = '(' . implode(') OR (', $wheres2) . ')';
 					break;
 				case 'all':
@@ -86,9 +86,9 @@ class plgSearchJComments extends JPlugin
 					foreach ($words as $word) {
 						$word = $db->Quote('%' . $db->escape($word, true) . '%', false);
 						$wheres2 = array();
-						$wheres2[] = "LOWER(c.name) LIKE " . $word;
-						$wheres2[] = "LOWER(c.comment) LIKE " . $word;
-						$wheres2[] = "LOWER(c.title) LIKE " . $word;
+						$wheres2[] = 'LOWER(' . $db->quoteName('c.name') . ') LIKE ' . $word;
+						$wheres2[] = 'LOWER(' . $db->quoteName('c.comment') . ') LIKE ' . $word;
+						$wheres2[] = 'LOWER(' . $db->quoteName('c.title') . ') LIKE ' . $word;
 						$wheres[] = implode(' OR ', $wheres2);
 					}
 					$where = '(' . implode(($phrase == 'all' ? ') AND (' : ') OR ('), $wheres) . ')';
@@ -97,11 +97,11 @@ class plgSearchJComments extends JPlugin
 
 			switch ($ordering) {
 				case 'oldest':
-					$order = 'c.date ASC';
+					$order = $db->quoteName('c.date') . ' ASC';
 					break;
 				case 'newest':
 				default:
-					$order = 'c.date DESC';
+					$order = $db->quoteName('c.date') . ' DESC';
 					break;
 			}
 
@@ -110,28 +110,34 @@ class plgSearchJComments extends JPlugin
 			$access = $acl->getUserAccess();
 
 			if (is_array($access)) {
-				$accessCondition = "AND jo.access IN (" . implode(',', $access) . ")";
+				$accessCondition = "AND " . $db->quoteName('jo.access') . " IN (" . implode(',', $access) . ")";
 			} else {
-				$accessCondition = "AND jo.access <= " . (int)$access;
+				$accessCondition = "AND " . $db->quoteName('jo.access') . " <= " . (int)$access;
 			}
 
-			$query = "SELECT "
-				. "  c.comment AS text"
-				. ", c.date AS created"
-				. ", '2' AS browsernav"
-				. ", '" . JText::_('PLG_SEARCH_JCOMMENTS_COMMENTS') . "' AS section"
-				. ", ''  AS href"
-				. ", c.id"
-				. ", jo.title AS object_title, jo.link AS object_link"
-				. " FROM #__jcomments AS c"
-				. " INNER JOIN #__jcomments_objects AS jo ON jo.object_id = c.object_id AND jo.object_group = c.object_group and jo.lang=c.lang"
-				. " WHERE c.published=1"
-				. " AND c.deleted=0"
-				. " AND jo.link <> ''"
-				. (JCommentsMultilingual::isEnabled() ? " AND c.lang = '" . JCommentsMultilingual::getLanguage() . "'" : "")
-				. " AND ($where) "
-				. $accessCondition
-				. " ORDER BY c.object_id, $order";
+			$query = $db->getQuery(true);
+			$query
+				->select($db->quoteName('c.comment','text'))
+				->select($db->quoteName('c.date','created'))
+				->select($db->quoteName('2','browsernav'))
+				->select($db->quoteName(JText::_('PLG_SEARCH_JCOMMENTS_COMMENTS'),'section'))
+				->select($db->quoteName('','href'))
+				->select($db->quoteName('c.id'))
+				->select($db->quoteName('jo.title','object_title'))
+				->select($db->quoteName('jo.link','object_link'))
+				->from($db->quoteName('#__jcomments','c'))
+				->join('INNER', $db->quoteName('#__jcomments_objects', 'jo') . ' ON (' .
+					$db->quoteName('jo.object_id') . ' = ' . $db->quoteName('c.object_id') . ' AND ' .
+					$db->quoteName('jo.object_group') . ' = ' . $db->quoteName('c.object_group') . ' AND ' .
+					$db->quoteName('jo.lang') . ' = ' . $db->quoteName('c.lang') . ')')
+				->where($db->quoteName('c.published') . '=' . (int)1)
+				->where($db->quoteName('c.deleted') . '=' . (int)0)
+				->where($db->quoteName('jo.link') . '<>' . $db->quote(''));
+			if(JCommentsMultilingual::isEnabled()) {
+				$query->where('c.lang = ' . $db->quote(JCommentsMultilingual::getLanguage()));
+			}
+			$query->where($where . $accessCondition);
+			$query->order($db->quoteName('c.object_id'), $order);
 
 			$db->setQuery($query, 0, $limit);
 			$rows = $db->loadObjectList();

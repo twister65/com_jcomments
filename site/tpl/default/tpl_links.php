@@ -29,7 +29,12 @@ class jtt_tpl_links extends JoomlaTuneTemplate
 
 			if (!isset($content->hits)) {
 				$db = JFactory::getDbo();
-				$db->setQuery('SELECT hits FROM #__content WHERE id = ' . (int) $content->id);
+				$query = $db->getQuery(true);
+				$query
+					->select($db->quoteName('hits'))
+					->from($db->quoteName('#__content'))
+					->where($db->quoteName('id') . ' = ' . (int)$content->id);
+				$db->setQuery($query);
 				$cnt = (int) $db->loadResult();
 			} else {
 				$cnt = (int) $content->hits;

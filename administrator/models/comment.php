@@ -23,10 +23,11 @@ class JCommentsModelComment extends JCommentsModelForm
 		$pk = (!empty($pk)) ? $pk : (int)$this->getState($this->getName() . '.id');
 
 		$query = $this->_db->getQuery(true);
-		$query->select('*');
-		$query->from($this->_db->quoteName('#__jcomments_reports'));
-		$query->where('commentid = ' . (int)$pk);
-		$query->order($this->_db->escape('date'));
+		$query
+			->select('*')
+			->from($this->_db->quoteName('#__jcomments_reports'))
+			->where($this->_db->quoteName('commentid') . ' = ' . (int)$pk)
+			->order($this->_db->escape('date'));
 
 		$this->_db->setQuery($query);
 		$items = $this->_db->loadObjectList();
@@ -37,9 +38,9 @@ class JCommentsModelComment extends JCommentsModelForm
 	public function deleteReport($id)
 	{
 		$query = $this->_db->getQuery(true);
-		$query->delete();
-		$query->from($this->_db->quoteName('#__jcomments_reports'));
-		$query->where('id = ' . (int) $id);
+		$query
+			->delete($this->_db->quoteName('#__jcomments_reports'))
+			->where($this->_db->quoteName('id') . ' = ' . (int) $id);
 
 		$this->_db->setQuery($query);
 		$this->_db->execute();
