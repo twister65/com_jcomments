@@ -29,15 +29,15 @@ CREATE TABLE IF NOT EXISTS "#__jcomments" (
 "editor" VARCHAR(50) DEFAULT NULL,
 PRIMARY KEY  ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_userid" ON "#__jcomments" ("userid");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_source" ON "#__jcomments" ("source");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_email" ON "#__jcomments" ("email");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_lang" ON "#__jcomments" ("lang");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_subscribe" ON "#__jcomments" ("subscribe");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_checkout" ON "#__jcomments" ("checked_out");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_object" ON "#__jcomments" ("object_id", "object_group", "published", "date");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_path" ON "#__jcomments" ("path", "level");
-CREATE INDEX IF NOT EXISTS "#__jcomments_idx_thread" ON "#__jcomments" ("thread_id");
+CREATE INDEX "#__jcomments_idx_userid" ON "#__jcomments" ("userid");
+CREATE INDEX "#__jcomments_idx_source" ON "#__jcomments" ("source");
+CREATE INDEX "#__jcomments_idx_email" ON "#__jcomments" ("email");
+CREATE INDEX "#__jcomments_idx_lang" ON "#__jcomments" ("lang");
+CREATE INDEX "#__jcomments_idx_subscribe" ON "#__jcomments" ("subscribe");
+CREATE INDEX "#__jcomments_idx_checkout" ON "#__jcomments" ("checked_out");
+CREATE INDEX "#__jcomments_idx_object" ON "#__jcomments" ("object_id", "object_group", "published", "date");
+CREATE INDEX "#__jcomments_idx_path" ON "#__jcomments" ("path", "level");
+CREATE INDEX "#__jcomments_idx_thread" ON "#__jcomments" ("thread_id");
 
 
 CREATE TABLE IF NOT EXISTS "#__jcomments_settings" (
@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS "#__jcomments_votes" (
 "value" smallint NOT NULL,
 PRIMARY KEY  ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_votes_idx_comment" ON "#__jcomments_votes" ("commentid", "userid");
-CREATE INDEX IF NOT EXISTS "#__jcomments_votes_idx_user" ON "#__jcomments_votes" ("userid", "date");
+CREATE INDEX "#__jcomments_votes_idx_comment" ON "#__jcomments_votes" ("commentid", "userid");
+CREATE INDEX "#__jcomments_votes_idx_user" ON "#__jcomments_votes" ("userid", "date");
 
 CREATE TABLE IF NOT EXISTS "#__jcomments_subscriptions" (
 "id" serial NOT NULL,
@@ -75,10 +75,10 @@ CREATE TABLE IF NOT EXISTS "#__jcomments_subscriptions" (
 "checked_out_time" timestamp DEFAULT '1970-01-01 00:00:00' NOT NULL,
 PRIMARY KEY ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_subscriptions_idx_object" ON "#__jcomments_subscriptions" ("object_id", "object_group");
-CREATE INDEX IF NOT EXISTS "#__jcomments_subscriptions_idx_lang" ON "#__jcomments_subscriptions" ("lang");
-CREATE INDEX IF NOT EXISTS "#__jcomments_subscriptions_idx_source" ON "#__jcomments_subscriptions" ("source");
-CREATE INDEX IF NOT EXISTS "#__jcomments_subscriptions_idx_hash" ON "#__jcomments_subscriptions" ("hash");
+CREATE INDEX "#__jcomments_subscriptions_idx_object" ON "#__jcomments_subscriptions" ("object_id", "object_group");
+CREATE INDEX "#__jcomments_subscriptions_idx_lang" ON "#__jcomments_subscriptions" ("lang");
+CREATE INDEX "#__jcomments_subscriptions_idx_source" ON "#__jcomments_subscriptions" ("source");
+CREATE INDEX "#__jcomments_subscriptions_idx_hash" ON "#__jcomments_subscriptions" ("hash");
 
 CREATE TABLE IF NOT EXISTS "#__jcomments_version" (
 "version" VARCHAR(16) NOT NULL DEFAULT '',
@@ -138,8 +138,8 @@ CREATE TABLE IF NOT EXISTS "#__jcomments_blacklist" (
 "editor" VARCHAR(50) DEFAULT NULL,
 PRIMARY KEY  ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_blacklist_idx_checkout" ON "#__jcomments_blacklist" ("checked_out");
-CREATE INDEX IF NOT EXISTS "#__jcomments_blacklist_idx_ip" ON "#__jcomments_blacklist" ("ip");
+CREATE INDEX "#__jcomments_blacklist_idx_checkout" ON "#__jcomments_blacklist" ("checked_out");
+CREATE INDEX "#__jcomments_blacklist_idx_ip" ON "#__jcomments_blacklist" ("ip");
 
 
 CREATE TABLE IF NOT EXISTS "#__jcomments_objects" (
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS "#__jcomments_objects" (
 "modified" timestamp DEFAULT '1970-01-01 00:00:00' NOT NULL,
 PRIMARY KEY  ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_objects_idx_object" ON "#__jcomments_objects" ("object_id", "object_group", "lang");
+CREATE INDEX "#__jcomments_objects_idx_object" ON "#__jcomments_objects" ("object_id", "object_group", "lang");
 
 CREATE TABLE IF NOT EXISTS "#__jcomments_mailq" (
 "id" serial NOT NULL,
@@ -170,8 +170,8 @@ CREATE TABLE IF NOT EXISTS "#__jcomments_mailq" (
 "session_id" VARCHAR(200) DEFAULT NULL,
 PRIMARY KEY  ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_mailq_idx_priority" ON "#__jcomments_mailq" ("priority");
-CREATE INDEX IF NOT EXISTS "#__jcomments_mailq_idx_attempts" ON "#__jcomments_mailq" ("attempts");
+CREATE INDEX "#__jcomments_mailq_idx_priority" ON "#__jcomments_mailq" ("priority");
+CREATE INDEX "#__jcomments_mailq_idx_attempts" ON "#__jcomments_mailq" ("attempts");
 
 CREATE TABLE IF NOT EXISTS "#__jcomments_smilies" (
 "id" serial NOT NULL,
@@ -185,4 +185,4 @@ CREATE TABLE IF NOT EXISTS "#__jcomments_smilies" (
 "checked_out_time" timestamp DEFAULT '1970-01-01 00:00:00' NOT NULL,
 PRIMARY KEY ("id")
 );
-CREATE INDEX IF NOT EXISTS "#__jcomments_smilies_idx_checkout" ON "#__jcomments_smilies" ("checked_out");
+CREATE INDEX "#__jcomments_smilies_idx_checkout" ON "#__jcomments_smilies" ("checked_out");
