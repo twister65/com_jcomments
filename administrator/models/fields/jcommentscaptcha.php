@@ -19,6 +19,7 @@ JFormHelper::loadFieldClass('list');
 class JFormFieldJCommentsCaptcha extends JFormFieldList
 {
 	protected $type = 'JCommentsCaptcha';
+	protected $format = '%s (Joomla)';
 
 	protected function getInput()
 	{
@@ -29,25 +30,31 @@ class JFormFieldJCommentsCaptcha extends JFormFieldList
 
 	protected function getOptions()
 	{
-		$options = array();
+		$folder = 'captcha';
 
-		JPluginHelper::importPlugin('jcomments');
+		$db    = JFactory::getDbo();
+		$query = $db->getQuery(true)
+			->select($db->quoteName('element','value'))
+			->select($db->quoteName('name','text'))
+			->from($db->quoteName('#__extensions'))
+			->where($db->quoteName('folder') . ' = ' . $db->quote($folder))
+			->where($db->quoteName('enabled') . ' = 1')
+			->order('ordering, ' . $db->quoteName('name'));
+		$db->setQuery($query);
+		$options = $db->loadObjectList();
 
-		if (version_compare(JVERSION, '3.0', 'ge')) {
-			$dispatcher = JEventDispatcher::getInstance();
-		} else {
-			$dispatcher = JDispatcher::getInstance();
+		$lang = JFactory::getLanguage();
+
+		foreach ($options as $i => $item)
+		{
+			$source = JPATH_PLUGINS . '/' . $folder . '/' . $item->value;
+			$extension = 'plg_' . $folder . '_' . $item->value;
+				$lang->load($extension . '.sys', JPATH_ADMINISTRATOR, null, false, true)
+			||	$lang->load($extension . '.sys', $source, null, false, true);
+			$options[$i]->text = sprintf($this->format, JText::_($item->text));
 		}
 
-		$items = $dispatcher->trigger('onJCommentsCaptchaEngines', array());
-
-		if (is_array($items)) {
-			foreach ($items as $item) {
-				foreach ($item as $code => $text) {
-					$options[] = JHtml::_('select.option', $code, $text);
-				}
-			}
-		}
+		$options[] = JHtml::_('select.option', 'joomladefault', sprintf($this->format, JText::_('JOPTION_USE_DEFAULT')));
 
 		$options = array_merge(parent::getOptions(), $options);
 
