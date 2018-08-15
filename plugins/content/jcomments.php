@@ -35,7 +35,7 @@ class plgContentJComments extends JPlugin
 
 		// check whether plugin has been unpublished
 		if (!JPluginHelper::isEnabled('content', 'jcomments')) {
-			JCommentsContentPluginHelper::clear($article);
+			JCommentsContentPluginHelper::clear($article,true);
 			return '';
 		}
 
@@ -203,7 +203,7 @@ class plgContentJComments extends JPlugin
 							  $this->params->get('comments_css_class', 'comments-link'));
 			}
 
-			JCommentsContentPluginHelper::clear($article);
+			JCommentsContentPluginHelper::clear($article,true);
 
 			// hide comments link if comments enabled but link disabled in plugin params
 			if ((($this->params->get('comments_count', 1) == 0)
@@ -243,7 +243,7 @@ class plgContentJComments extends JPlugin
 					}
 				}
 			}
-			JCommentsContentPluginHelper::clear($article);
+			JCommentsContentPluginHelper::clear($article,true);
 		}
 
 		return '';
@@ -265,7 +265,7 @@ class plgContentJComments extends JPlugin
 				|| $app->input->getBool('fullview')
 				|| $app->input->get('print')
 			) {
-				JCommentsContentPluginHelper::clear($article);
+				JCommentsContentPluginHelper::clear($article,true);
 
 				return '';
 			}
@@ -276,7 +276,7 @@ class plgContentJComments extends JPlugin
 			$isEnabled = ($config->getInt('comments_on', 0) == 1) && ($config->getInt('comments_off', 0) == 0);
 
 			if ($isEnabled && $view == 'article') {
-				JCommentsContentPluginHelper::clear($article);
+				JCommentsContentPluginHelper::clear($article,true);
 				return JComments::show($article->id, 'com_content', $article->title);
 			}
 		}
@@ -321,7 +321,7 @@ class plgContentJComments extends JPlugin
 			}
 
 			$article->text = $originalText;
-			JCommentsContentPluginHelper::clear($article);
+			JCommentsContentPluginHelper::clear($article,true);
 		}
 	}
 
