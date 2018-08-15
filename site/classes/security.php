@@ -83,7 +83,7 @@ class JCommentsSecurity
 			$query
 				->select('COUNT(*)')
 				->from($db->quoteName('#__users'))
-				->where(lower(lower($db->quoteName('name')) . ' = ' . $db->quote($name), 'OR')
+				->where(lower($db->quoteName('name')) . ' = ' . $db->quote($name), 'OR')
 				->where(lower($db->quoteName('username')) . ' = ' . $db->quote($name), 'OR');
 			$db->setQuery($query);
 
