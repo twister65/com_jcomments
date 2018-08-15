@@ -105,6 +105,7 @@ class JCommentsAJAX
 		}
 
 		$response = JCommentsFactory::getAjaxResponse();
+		$object_group = JCommentsSecurity::clearObjectGroup($object_group);
 
 		$form = JComments::getCommentsForm($object_id, $object_group);
 		$response->addAssign($target, 'innerHTML', $form);
@@ -119,7 +120,7 @@ class JCommentsAJAX
 
 		$config = JCommentsFactory::getConfig();
 		if ($config->getInt('report_reason_required') == 0) {
-			$_POST['commentid'] = (int) $id;
+			JFactory::getApplication()->input->post->set('commentid', (int) $id);
 			$response = JCommentsFactory::getAjaxResponse();
 			$response->addAssign($target, 'innerHTML', '<div id="comments-report-form"></div>');
 			return self::reportComment();
@@ -147,7 +148,7 @@ class JCommentsAJAX
 		$response = JCommentsFactory::getAjaxResponse();
 
 		if ($acl->canComment()) {
-			$values = self::prepareValues( $_POST );
+			$values = self::prepareValues($_POST);
 
 			$object_group = isset($values['object_group']) ? JCommentsSecurity::clearObjectGroup($values['object_group']) : '';
 			$object_id = isset($values['object_id']) ? intval($values['object_id']) : '';
@@ -614,7 +615,7 @@ class JCommentsAJAX
 		return $response;
 	}
 
-	public static function cancelComment( $id )
+	public static function cancelComment($id)
 	{
 		if (JCommentsSecurity::badRequest() == 1) {
 			JCommentsSecurity::notAuth();
@@ -811,6 +812,7 @@ class JCommentsAJAX
 
 		$object_id = (int) $object_id;
 		$object_group = strip_tags($object_group);
+		$object_group = JCommentsSecurity::clearObjectGroup($object_group);
 		$page = (int) $page;
 
 		self::updateCommentsList($response, $object_id, $object_group, $page);
@@ -883,6 +885,7 @@ class JCommentsAJAX
 	{
 		$user = JFactory::getUser();
 		$response = JCommentsFactory::getAjaxResponse();
+		$object_group = JCommentsSecurity::clearObjectGroup($object_group);
 
 		if ($user->id) {
 			require_once (JCOMMENTS_SITE.'/jcomments.subscription.php');
@@ -997,7 +1000,7 @@ class JCommentsAJAX
 		$db = JFactory::getDbo();
 		$config = JCommentsFactory::getConfig();
 		$response = JCommentsFactory::getAjaxResponse();
-		$values = self::prepareValues( $_POST );
+		$values = self::prepareValues($_POST);
 
 		$id = (int) $values['commentid'];
 		$reason = trim(strip_tags($values['reason']));
