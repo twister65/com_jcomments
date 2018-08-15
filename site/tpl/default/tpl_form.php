@@ -281,12 +281,18 @@ else {if (typeof window.onload=='function'){var oldload=window.onload;window.onl
 	 */
 	function getMessage( $text )
 	{
-		if ($text != '') {
+		$htmlBeforeForm = $this->getVar('comments-html-before-form');
+		$htmlAfterForm = $this->getVar('comments-html-after-form');
 ?>
 <a id="addcomments" href="#addcomments"></a>
+<?php
+		echo $htmlBeforeForm;
+		if ($text != '') {
+?>
 <p class="message"><?php echo $text; ?></p>
 <?php
 		}
+		echo $htmlAfterForm;
 	}
 
 	function getFormFields($fields)
