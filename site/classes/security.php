@@ -58,7 +58,7 @@ class JCommentsSecurity
 		if (!empty($names) && !empty($str)) {
 			$str = trim(JString::strtolower($str));
 
-			$names = JString::strtolower(preg_replace("#,+#", ',', preg_replace("#[\n|\r]+#", ',', $names)));
+			$names = JString::strtolower(preg_replace("#,+#u", ',', preg_replace("#[\n|\r]+#u", ',', $names)));
 			$names = explode(",", $names);
 
 			foreach ($names as $name) {
@@ -83,8 +83,8 @@ class JCommentsSecurity
 			$query
 				->select('COUNT(*)')
 				->from($db->quoteName('#__users'))
-				->where(lower($db->quoteName('name')) . ' = ' . $db->quote($name), 'OR')
-				->where(lower($db->quoteName('username')) . ' = ' . $db->quote($name), 'OR');
+				->where('LOWER(' . $db->quoteName('name') . ') = ' . $db->quote($db->escape($name,true)), 'OR')
+				->where('LOWER(' . $db->quoteName('username') . ') = ' . $db->quote($db->escape($name,true)), 'OR');
 			$db->setQuery($query);
 
 			return ($db->loadResult() == 0) ? 0 : 1;
@@ -105,7 +105,7 @@ class JCommentsSecurity
 			$query
 				->select('COUNT(*)')
 				->from($db->quoteName('#__users'))
-				->where(lower($db->quoteName('email')) . ' = ' . $db->quote($email));
+				->where('LOWER(' . $db->quoteName('email') . ') = ' . $db->quote($db->escape($email, true)));
 			$db->setQuery($query);
 
 			return ($db->loadResult() == 0) ? 0 : 1;
