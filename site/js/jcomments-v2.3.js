@@ -341,6 +341,7 @@ JComments.prototype = {
 			var f=this.form,ff=this.form.form,p=this.$('comment-parent-id-hidden');
 			if(ff!=null&&c!=null){if(!p){f.add('parent','comment-parent-id-hidden',id);}else{p.value=id;}this.moveElement(ff,d);this.setMode('reply',id);this.form.focus();if(q){this.quoteComment(id);}}
 		}
+		if (typeof(grecaptcha) != 'undefined') {grecaptcha.reset();}
 	},
 	formLoaded: function(){},
 	restoreForm: function(c){var f=this.form;if(f!=null){var ff=this.form.form;this.busy.stop();
