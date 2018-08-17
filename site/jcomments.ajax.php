@@ -105,6 +105,7 @@ class JCommentsAJAX
 		}
 
 		$response = JCommentsFactory::getAjaxResponse();
+		$object_group = JCommentsSecurity::clearObjectGroup($object_group);
 
 		$form = JComments::getCommentsForm($object_id, $object_group);
 		$response->addAssign($target, 'innerHTML', $form);
@@ -119,7 +120,7 @@ class JCommentsAJAX
 
 		$config = JCommentsFactory::getConfig();
 		if ($config->getInt('report_reason_required') == 0) {
-			$_POST['commentid'] = (int) $id;
+			JFactory::getApplication()->input->post->set('commentid', (int) $id);
 			$response = JCommentsFactory::getAjaxResponse();
 			$response->addAssign($target, 'innerHTML', '<div id="comments-report-form"></div>');
 			return self::reportComment();
@@ -147,7 +148,7 @@ class JCommentsAJAX
 		$response = JCommentsFactory::getAjaxResponse();
 
 		if ($acl->canComment()) {
-			$values = self::prepareValues( $_POST );
+			$values = self::prepareValues($_POST);
 
 			$object_group = isset($values['object_group']) ? JCommentsSecurity::clearObjectGroup($values['object_group']) : '';
 			$object_id = isset($values['object_id']) ? intval($values['object_id']) : '';
@@ -235,14 +236,12 @@ class JCommentsAJAX
 							return $response;
 						}
 					} else if ($captchaEngine == 'recaptcha') {
-						$post = JRequest::get('post');
-						//$post = JFactory::getApplication()->input->post;
 						JPluginHelper::importPlugin('captcha');
 						$dispatcher = JEventDispatcher::getInstance();
-						$res = $dispatcher->trigger('onCheckAnswer',$post['recaptcha_response_field']);
+						$res = $dispatcher->trigger('onCheckAnswer');
 						if(!$res[0]){
 							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
-							$response->addScript("Recaptcha.reload()");
+							$response->addScript("grecaptcha.reset()");
 							return $response;
 						}
 					} else {
@@ -409,9 +408,14 @@ class JCommentsAJAX
 					if (!$comment->store()) {
 						$response->addScript("jcomments.clear('comment');");
 
-						if ($acl->check('enable_captcha') == 1 && $config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
-							JCommentsCaptcha::destroy();
-							$response->addScript("jcomments.clear('captcha');");
+						if ($acl->check('enable_captcha') == 1) {
+							if ($config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
+								JCommentsCaptcha::destroy();
+								$response->addScript("jcomments.clear('captcha');");
+							} 
+							else if ($config->get('captcha_engine', 'kcaptcha') == 'recaptcha') {
+								$response->addScript("grecaptcha.reset()");
+							}
 						}
 						return $response;
 					}
@@ -486,10 +490,15 @@ class JCommentsAJAX
 					// clear comments textarea & update comment length counter if needed
 					$response->addScript("jcomments.clear('comment');");
 
-					if ($acl->check('enable_captcha') == 1 && $config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
-						require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
-						JCommentsCaptcha::destroy();
-						$response->addScript("jcomments.clear('captcha');");
+					if ($acl->check('enable_captcha') == 1) {
+						if ($config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
+							require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
+							JCommentsCaptcha::destroy();
+							$response->addScript("jcomments.clear('captcha');");
+						}
+						else if ($config->get('captcha_engine', 'kcaptcha') == 'recaptcha') {
+							$response->addScript("grecaptcha.reset();");
+						}
 					}
 				} else {
 					self::showErrorMessage(JText::_('ERROR_DUPLICATE_COMMENT'), 'comment');
@@ -614,7 +623,7 @@ class JCommentsAJAX
 		return $response;
 	}
 
-	public static function cancelComment( $id )
+	public static function cancelComment($id)
 	{
 		if (JCommentsSecurity::badRequest() == 1) {
 			JCommentsSecurity::notAuth();
@@ -811,6 +820,7 @@ class JCommentsAJAX
 
 		$object_id = (int) $object_id;
 		$object_group = strip_tags($object_group);
+		$object_group = JCommentsSecurity::clearObjectGroup($object_group);
 		$page = (int) $page;
 
 		self::updateCommentsList($response, $object_id, $object_group, $page);
@@ -883,6 +893,7 @@ class JCommentsAJAX
 	{
 		$user = JFactory::getUser();
 		$response = JCommentsFactory::getAjaxResponse();
+		$object_group = JCommentsSecurity::clearObjectGroup($object_group);
 
 		if ($user->id) {
 			require_once (JCOMMENTS_SITE.'/jcomments.subscription.php');
@@ -997,7 +1008,7 @@ class JCommentsAJAX
 		$db = JFactory::getDbo();
 		$config = JCommentsFactory::getConfig();
 		$response = JCommentsFactory::getAjaxResponse();
-		$values = self::prepareValues( $_POST );
+		$values = self::prepareValues($_POST);
 
 		$id = (int) $values['commentid'];
 		$reason = trim(strip_tags($values['reason']));

@@ -13,6 +13,15 @@ defined('_JEXEC') or die;
 Changelog
 ------------
 
+3.0.6
+* Security fix (processing ajax function calls)
+* Security fix (more accurate sanitizing object_group parameter)
++ Added support of IP addresses with '*' wildcards (for blacklist feature).
+^ JComments tags (like {jcomments off}) processing optimization
+# Guests were able to post comment with admin's names in wrong letter case
+^ Updated plugin for Cobalt 8 objects support
+# Fixed bug in notifications helper (thanks to mascensao)
+
 3.0.5
 # Fixed incorrect quotes processing if author name contains apostrophe
 # Incorrect content plugin behavior when introtext is empty
@@ -39,7 +48,7 @@ Changelog
 # Fatal error: Cannot redeclare class JCommentsControllerLegacy
 ^ Improved comments import from RSComments
 ^ Not showing IP address of authors in admin/backend
-^ Categories list does not uses Bootsrap ‘hosen behavior
+^ Categories list does not uses Bootsrap â€˜hosen behavior
 - Removed 'All' option from language filter in Settings section
 # CustomBBCodes were not loaded
 # Refresh cache does not stop if comments list is empty

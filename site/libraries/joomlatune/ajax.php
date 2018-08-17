@@ -198,7 +198,7 @@ if (!defined ('JOOMLATUNE_AJAX'))
 		{
 			if ($this->_isObjectCallback($sFunction)) {
 				$mReturn = call_user_func_array($this->aObjects[$sFunction], $aArgs);
-			} else {
+			} else if (array_key_exists($sFunction, $this->aFunctions)) {
 				$mReturn = call_user_func_array($sFunction, $aArgs);
 			}
 			return $mReturn;
