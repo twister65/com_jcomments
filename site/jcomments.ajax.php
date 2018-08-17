@@ -236,14 +236,12 @@ class JCommentsAJAX
 							return $response;
 						}
 					} else if ($captchaEngine == 'recaptcha') {
-						$post = JRequest::get('post');
-						//$post = JFactory::getApplication()->input->post;
 						JPluginHelper::importPlugin('captcha');
 						$dispatcher = JEventDispatcher::getInstance();
-						$res = $dispatcher->trigger('onCheckAnswer',$post['recaptcha_response_field']);
+						$res = $dispatcher->trigger('onCheckAnswer');
 						if(!$res[0]){
 							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
-							$response->addScript("Recaptcha.reload()");
+							$response->addScript("grecaptcha.reset()");
 							return $response;
 						}
 					} else {
@@ -410,9 +408,14 @@ class JCommentsAJAX
 					if (!$comment->store()) {
 						$response->addScript("jcomments.clear('comment');");
 
-						if ($acl->check('enable_captcha') == 1 && $config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
-							JCommentsCaptcha::destroy();
-							$response->addScript("jcomments.clear('captcha');");
+						if ($acl->check('enable_captcha') == 1) {
+							if ($config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
+								JCommentsCaptcha::destroy();
+								$response->addScript("jcomments.clear('captcha');");
+							} 
+							else if ($config->get('captcha_engine', 'kcaptcha') == 'recaptcha') {
+								$response->addScript("grecaptcha.reset()");
+							}
 						}
 						return $response;
 					}
@@ -487,10 +490,15 @@ class JCommentsAJAX
 					// clear comments textarea & update comment length counter if needed
 					$response->addScript("jcomments.clear('comment');");
 
-					if ($acl->check('enable_captcha') == 1 && $config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
-						require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
-						JCommentsCaptcha::destroy();
-						$response->addScript("jcomments.clear('captcha');");
+					if ($acl->check('enable_captcha') == 1) {
+						if ($config->get('captcha_engine', 'kcaptcha') == 'kcaptcha') {
+							require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
+							JCommentsCaptcha::destroy();
+							$response->addScript("jcomments.clear('captcha');");
+						}
+						else if ($config->get('captcha_engine', 'kcaptcha') == 'recaptcha') {
+							$response->addScript("grecaptcha.reset();");
+						}
 					}
 				} else {
 					self::showErrorMessage(JText::_('ERROR_DUPLICATE_COMMENT'), 'comment');
