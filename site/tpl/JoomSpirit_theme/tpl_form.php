@@ -166,7 +166,6 @@ class jtt_tpl_form extends JoomlaTuneTemplate
 </div>
 </form>
 <script type="text/javascript">
-<!--
 function JCommentsInitializeForm()
 {
 	var jcEditor = new JCommentsEditor('comments-form-comment', true);
@@ -251,7 +250,7 @@ else {if (typeof window.onload=='function'){var oldload=window.onload;window.onl
 <?php
 	}
 ?>
-//-->
+
 </script>
 <?php echo $htmlAfterForm; ?>
 <?php

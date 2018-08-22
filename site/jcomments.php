@@ -342,13 +342,6 @@ class JComments
 				return $result;
 			}
 
-			if ($acl->check('enable_captcha') == 1) {
-				$captchaEngine = $config->get('captcha_engine', 'kcaptcha');
-				if ($captchaEngine != 'kcaptcha') {
-					JCommentsEventHelper::trigger('onJCommentsCaptchaJavaScript');
-				}
-			}
-
 			if (!$showForm) {
 				$tmpl->addVar('tpl_form', 'comments-form-link', 1);
 				$result = $tmpl->renderTemplate('tpl_form');
