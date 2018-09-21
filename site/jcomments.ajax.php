@@ -227,30 +227,71 @@ class JCommentsAJAX
 			} else {
 				if ($acl->check('enable_captcha') == 1) {
 					$captchaEngine = $config->get('captcha_engine', 'kcaptcha');
-					if ($captchaEngine == 'kcaptcha') {
-						require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
-						if (!JCommentsCaptcha::check($values['captcha_refid'])) {
-							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
-							JCommentsCaptcha::destroy();
-							$response->addScript("jcomments.clear('captcha');");
-							return $response;
-						}
-					} else if ($captchaEngine == 'recaptcha') {
-						JPluginHelper::importPlugin('captcha');
-						$dispatcher = JEventDispatcher::getInstance();
-						$res = $dispatcher->trigger('onCheckAnswer');
-						if(!$res[0]){
-							self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
-							$response->addScript("grecaptcha.reset()");
-							return $response;
-						}
-					} else {
-						$result = JCommentsEventHelper::trigger('onJCommentsCaptchaVerify', array($values['captcha_refid'], &$response));
-						// if all plugins returns false
-						if (!in_array(true, $result, true)) {
-							self::showErrorMessage(JText::_('ERROR_CAPTCHA'));
-							return $response;
-						}
+
+					switch ($captchaEngine)
+					{
+						case 'kcaptcha':
+							require_once( JCOMMENTS_SITE.'/jcomments.captcha.php' );
+							if (!JCommentsCaptcha::check($values['captcha_refid'])) {
+								self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
+								JCommentsCaptcha::destroy();
+								$response->addScript("jcomments.clear('captcha');");
+								return $response;
+							}
+							break;
+
+						case 'recaptcha':
+							JPluginHelper::importPlugin('captcha', "recaptcha");
+							$dispatcher = JEventDispatcher::getInstance();
+							//Check if the installed version of Joomla is less than 3.9
+							if (version_compare(JVERSION, '3.9', '<' ) == 1)
+							{
+								$res = $dispatcher->trigger('onCheckAnswer');
+								if(!$res[0])
+								{
+									self::showErrorMessage(JText::_('ERROR_CAPTCHA'), 'captcha');
+									$response->addScript("grecaptcha.reset()");
+									return $response;
+								}
+							}
+							else
+							{
+								try
+								{
+									$dispatcher->trigger('onCheckAnswer');
+								}
+								catch (Exception $e)
+								{
+									self::showErrorMessage($e->getMessage());
+									$response->addScript("grecaptcha.reset()");
+									return $response;
+								}
+							}
+							break;
+
+						//Since Joomla v3.9, reCaptcha invisible is implemented
+						case 'recaptcha_invisible':
+							JPluginHelper::importPlugin('captcha', "recaptcha_invisible");
+							$dispatcher = JEventDispatcher::getInstance();
+							try
+							{
+								$dispatcher->trigger('onCheckAnswer');
+							}
+							catch (Exception $e)
+							{
+								self::showErrorMessage($e->getMessage());
+								$response->addScript("grecaptcha.reset()");
+								return $response;
+							}
+							break;
+
+						default:
+							$result = JCommentsEventHelper::trigger('onJCommentsCaptchaVerify', array($values['captcha_refid'], &$response));
+							// if all plugins returns false
+							if (!in_array(true, $result, true)) {
+								self::showErrorMessage(JText::_('ERROR_CAPTCHA'));
+								return $response;
+							}
 					}
 				}
 

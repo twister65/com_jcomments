@@ -142,11 +142,8 @@ class jtt_tpl_form extends JoomlaTuneTemplate
 </p>
 <?php
 			} else {
-				JPluginHelper::importPlugin('captcha', "recaptcha");
-				$dispatcher = JEventDispatcher::getInstance();
-				$dispatcher->trigger('onInit','dynamic_recaptcha_1');
-				$output = $dispatcher->trigger('onDisplay', array("recaptcha", 'dynamic_recaptcha_1', 'class="g-recaptcha"'));
-				echo $output[0];
+				$recaptcha = JCaptcha::getInstance('recaptcha', array('namespace' => 'anything'));
+				echo $recaptcha->display('recaptcha', 'dynamic_recaptcha_1','g-recaptcha');
 ?>
 <?php
 			}

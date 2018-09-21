@@ -434,13 +434,14 @@ class JComments
 				$tmpl->addVar('tpl_form', 'comments-form-captcha', 1);
 
 				$captchaEngine = $config->get('captcha_engine', 'kcaptcha');
-				if ($captchaEngine == 'kcaptcha') {
-					// TODO
-				} else {
-					if ($config->getInt('enable_plugins') == 1) {
-						$captchaHTML = JCommentsEventHelper::trigger('onJCommentsCaptchaDisplay');
-						$tmpl->addVar('tpl_form', 'comments-form-captcha-html', implode("\n", $captchaHTML));
-					}
+				if ( ($captchaEngine == 'kcaptcha') || ($captchaEngine == 'recaptcha') || ($captchaEngine == 'recaptcha_invisible') )
+				{
+					$tmpl->addVar('tpl_form', 'comments-form-captcha-html', $captchaEngine);
+				}
+				else
+				{
+					$captchaHTML = JCommentsEventHelper::trigger('onJCommentsCaptchaDisplay');
+					$tmpl->addVar('tpl_form', 'comments-form-captcha-html', implode("\n", $captchaHTML));
 				}
 			}
 

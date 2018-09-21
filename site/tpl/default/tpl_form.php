@@ -129,7 +129,7 @@ class jtt_tpl_form extends JoomlaTuneTemplate
 		}
 
 		if ($this->getVar('comments-form-captcha', 0) == 1) {
-			$html = $this->getVar('comments-form-captcha-html','kcaptcha');
+			$html = $this->getVar('comments-form-captcha-html');
 			if ($html == 'kcaptcha') {
 				$link = JCommentsFactory::getLink('captcha');
 
@@ -143,11 +143,8 @@ class jtt_tpl_form extends JoomlaTuneTemplate
 </p>
 <?php
 			} else {
-				JPluginHelper::importPlugin('captcha', "recaptcha");
-				$dispatcher = JEventDispatcher::getInstance();
-				$dispatcher->trigger('onInit','dynamic_recaptcha_1');
-				$output = $dispatcher->trigger('onDisplay', array("recaptcha", 'dynamic_recaptcha_1', 'class="g-recaptcha"'));
-                                echo $output[0];
+				$recaptcha = JCaptcha::getInstance($html, array('namespace' => 'jcomments'));
+				echo $recaptcha->display('recaptcha', 'dynamic_recaptcha_1','g-recaptcha');
 ?>
 <?php
 			}
