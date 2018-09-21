@@ -213,6 +213,6 @@
 	</plugins>
 
 	<updateservers>
-		<server type="extension" priority="1" name="JComments Update Site">https://github.com/twister65/com_jcomments/updates/jcomments.xml</server>
+		<server type="extension" priority="1" name="JComments Update Site">http://olaverre.free.fr/downloads/extensions/updates/jcomments.xml</server>
 	</updateservers>
 </extension>
