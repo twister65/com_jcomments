@@ -18,15 +18,15 @@ class JCommentsVersion
 	/** @var int Main Release Level */
 	var $RELEASE = '3.0';
 	/** @var int Sub Release Level */
-	var $DEV_LEVEL = '7';
+	var $DEV_LEVEL = '8';
 	/** @var string Development Status */
 	var $DEV_STATUS = '';
 	/** @var int Build Number */
 	var $BUILD = '';
 	/** @var string Date */
-	var $RELDATE = '15/08/2018';
+	var $RELDATE = '21/09/2018';
 	/** @var string Time */
-	var $RELTIME = '19:01';
+	var $RELTIME = '06:06';
 	/** @var string Timezone */
 	var $RELTZ = 'GMT+2';
 

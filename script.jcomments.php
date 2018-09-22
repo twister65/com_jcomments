@@ -64,8 +64,21 @@ class com_jcommentsInstallerScript
 			if (JFolder::exists($src . '/plugins/' . $group . '/' . $name)) {
 				$path = $src . '/plugins/' . $group . '/' . $name;
 			}
-			$installer = new JInstaller;
-			$result = $installer->install($path);
+
+			$query = $db->getQuery(true);
+			$query
+				->select('COUNT(*)')
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('type') . ' = ' . $db->Quote('plugin'))
+				->where($db->quoteName('element') . ' = ' . $db->Quote($name))
+				->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
+			$db->setQuery($query);
+			$count = $db->loadResult();
+			if ($count == 0)
+			{
+				$installer = new JInstaller;
+				$result = $installer->install($path);
+			}
 
 			$query = $db->getQuery(true);
 			$query
