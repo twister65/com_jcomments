@@ -1,5 +1,6 @@
 # com_jcomments
 The JComments is a powerful and easy to use AJAX based comment system for Joomla with flexible ACL, smiles, BBCodes and avatars support.
-This is the JComments 3.0.7 official release, that you can find at http://www.joomlatune.com/jcomments-downloads.html, with postgreSQL (and MySQL) support, Google reCAPTCHA 2.0, and JoomSpirit template. Have fun !
+This is the JComments release, that you can find at http://www.joomlatune.com/jcomments-downloads.html, with postgreSQL (and MySQL) support, Joomla reCaptcha plugins (reCAPTCHA "I am not a robot" and "invisible"), and JoomSpirit theme.
+I plan to add support for Microsoft SQL Server later.
 For more information, see the Wiki page.
 ![Alt text](Jcomments-reCaptcha.png)
