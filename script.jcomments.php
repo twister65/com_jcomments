@@ -45,6 +45,7 @@ class com_jcommentsInstallerScript
 		$messages['system'] = JText::_('A_INSTALL_PLUGIN_SYSTEM');
 		$messages['user'] = JText::_('A_INSTALL_PLUGIN_USER');
 		$messages['editors-xtd'] = JText::_('A_INSTALL_PLUGIN_EDITORS_XTD');
+		$messages['mod_jcomments_latest'] = JText::_('A_INSTALL_MODULE_LATEST');
 
 		$data = new stdClass;
 		$data->title = JText::_('A_INSTALL_LOG');
@@ -52,11 +53,37 @@ class com_jcommentsInstallerScript
 		$data->next = JUri::root() . 'administrator/index.php?option=com_jcomments&view=settings';
 		$data->messages = array();
 		$data->plugins = array();
+		$data->modules = array();
 
 		$src = $parent->getParent()->getPath('source');
 		$manifest = $parent->getParent()->manifest;
-		$plugins = $manifest->xpath('plugins/plugin');
 
+		$modules = $manifest->xpath('modules/module');
+		foreach ($modules as $module) {
+			$name = (string)$module->attributes()->module;
+			$client_id = strcmp((string)$module->attributes()->client,"site")==0?0:1;
+			$path = $src . '/modules/' . $name;
+
+			$query = $db->getQuery(true);
+			$query
+				->select('COUNT(*)')
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('type') . ' = ' . $db->Quote('module'))
+				->where($db->quoteName('element') . ' = ' . $db->Quote($name))
+				->where($db->quoteName('client_id') . ' = ' . $client_id);
+			$db->setQuery($query);
+			$count = $db->loadResult();
+			if ($count == 0)
+			{
+				$installer = new JInstaller;
+				$result = $installer->install($path);
+			}
+
+			$data->messages[] = array('text' => $messages[$name], 'result' => $result);
+			$data->modules[] = array('name' => $name, 'result' => $result);
+		}
+
+		$plugins = $manifest->xpath('plugins/plugin');
 		foreach ($plugins as $plugin) {
 			$name = (string)$plugin->attributes()->plugin;
 			$group = (string)$plugin->attributes()->group;
@@ -235,6 +262,7 @@ class com_jcommentsInstallerScript
 		$messages['search'] = JText::_('A_UNINSTALL_PLUGIN_SEARCH');
 		$messages['system'] = JText::_('A_UNINSTALL_PLUGIN_SYSTEM');
 		$messages['editors-xtd'] = JText::_('A_UNINSTALL_PLUGIN_EDITORS_XTD');
+		$messages['mod_jcomments_latest'] = JText::_('A_UNINSTALL_MODULE_LATEST');
 
 		$data = new stdClass;
 		$data->title = JText::_('A_UNINSTALL_LOG');
@@ -242,6 +270,34 @@ class com_jcommentsInstallerScript
 		$data->messages = array();
 
 		$manifest = $parent->getParent()->manifest;
+
+		$modules = $manifest->xpath('modules/module');
+		foreach ($modules as $module) {
+			$name = (string)$module->attributes()->module;
+			$client_id = strcmp((string)$module->attributes()->client,"site")==0?0:1;
+
+			$query = $db->getQuery(true);
+			$query
+				->select($db->quoteName('extension_id'))
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('type') . ' = ' . $db->Quote('module'))
+				->where($db->quoteName('element') . ' = ' . $db->Quote($name))
+				->where($db->quoteName('client_id') . ' = ' . $client_id);
+			$db->setQuery($query);
+
+			$extensions = $db->loadColumn();
+
+			if (count($extensions)) {
+				$result = false;
+				foreach ($extensions as $id) {
+					$installer = new JInstaller;
+					$result = $installer->uninstall('module', $id);
+				}
+
+				$data->messages[] = array('text' => $messages[$name], 'result' => $result);
+			}
+		}
+
 		$plugins = $manifest->xpath('plugins/plugin');
 		foreach ($plugins as $plugin) {
 			$name = (string)$plugin->attributes()->plugin;

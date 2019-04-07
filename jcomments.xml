@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
 	<name>JComments</name>
-	<creationDate>21/09/2018</creationDate>
+	<creationDate>07/04/2019</creationDate>
 	<author>smart</author>
 	<authorEmail>smart@joomlatune.ru</authorEmail>
 	<authorUrl>http://www.joomlatune.ru</authorUrl>
-	<copyright>Copyright 2006-2018 JoomlaTune.ru All rights reserved!</copyright>
+	<copyright>Copyright 2006-2019 JoomlaTune.ru All rights reserved!</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
-	<version>3.0.8</version>
+	<version>3.0.7.1</version>
 	<description><![CDATA[JComments lets your users comment on content items.]]></description>
 
 	<scriptfile>script.jcomments.php</scriptfile>
@@ -48,7 +48,7 @@
 		<folder>tpl</folder>
 		<folder>views</folder>
 	</files>
- 
+
 	<languages folder="site/languages">
 		<language tag="ar-AA">ar-AA.com_jcomments.ini</language>
 		<language tag="ar-AA">ar-AA.plg_search_jcomments.ini</language>
@@ -165,7 +165,7 @@
 			<filename>config.xml</filename>
 			<filename>version.php</filename>
 		</files>
-	
+
 		<languages folder="administrator/language">
 			<language tag="en-GB">en-GB/en-GB.com_jcomments.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_jcomments.sys.ini</language>
@@ -183,7 +183,7 @@
 			<language tag="en-GB">en-GB/en-GB.plg_system_jcomments.sys.ini</language>
 			<language tag="en-GB">en-GB/en-GB.plg_user_jcomments.ini</language>
 			<language tag="en-GB">en-GB/en-GB.plg_user_jcomments.sys.ini</language>
-			
+
 			<language tag="ru-RU">ru-RU/ru-RU.com_jcomments.ini</language>
 			<language tag="ru-RU">ru-RU/ru-RU.com_jcomments.sys.ini</language>
 			<language tag="ru-RU">ru-RU/ru-RU.plg_content_jcomments.ini</language>
@@ -202,7 +202,7 @@
 			<language tag="ru-RU">ru-RU/ru-RU.plg_user_jcomments.sys.ini</language>
 		</languages>
 	</administration>
-	
+
 	<plugins>
 		<plugin plugin="jcomments" group="content" />
 		<plugin plugin="jcommentson" group="editors-xtd" />
@@ -212,6 +212,10 @@
 		<plugin plugin="jcomments" group="user" />
 		<plugin plugin="jcomments" group="quickicon" />
 	</plugins>
+
+	<modules>
+		<module module="mod_jcomments_latest" client="site" />
+	</modules>
 
 	<updateservers>
 		<server type="extension" priority="1" name="JComments Update Site">http://olaverre.free.fr/downloads/extensions/updates/jcomments.xml</server>

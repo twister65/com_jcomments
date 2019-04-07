@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" client="site" version="2.5" method="upgrade">
+	<name>JComments Latest</name>
+	<creationDate>07/04/2019</creationDate>
+	<author>smart</author>
+	<copyright>Copyright 2006-2019 Joomlatune.ru All rights reserved!</copyright>
+	<authorEmail>smart@joomlatune.ru</authorEmail>
+	<authorUrl>http://www.joomlatune.ru</authorUrl>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<version>1.1</version>
+	<description>MOD_JCOMMENTS_LATEST_XML_DESCRIPTION</description>
+	<files>
+		<filename module="mod_jcomments_latest">mod_jcomments_latest.php</filename>
+		<folder>fields</folder>
+		<folder>tmpl</folder>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>
+		<filename>mod_jcomments_latest.xml</filename>
+	</files>
+	<media destination="mod_jcomments_latest" folder="media">
+		<filename>index.html</filename>
+		<folder>css</folder>
+	</media>
+	<languages folder="language">
+		<language tag="ar-AA">ar-AA/ar-AA.mod_jcomments_latest.ini</language>
+		<language tag="ar-AA">ar-AA/ar-AA.mod_jcomments_latest.sys.ini</language>
+		<language tag="be-BY">be-BY/be-BY.mod_jcomments_latest.ini</language>
+		<language tag="be-BY">be-BY/be-BY.mod_jcomments_latest.sys.ini</language>
+		<language tag="bg-BG">bg-BG/bg-BG.mod_jcomments_latest.ini</language>
+		<language tag="bg-BG">bg-BG/bg-BG.mod_jcomments_latest.sys.ini</language>
+		<language tag="cs-CZ">cs-CZ/cs-CZ.mod_jcomments_latest.ini</language>
+		<language tag="cs-CZ">cs-CZ/cs-CZ.mod_jcomments_latest.sys.ini</language>
+		<language tag="da-DK">da-DK/da-DK.mod_jcomments_latest.ini</language>
+		<language tag="da-DK">da-DK/da-DK.mod_jcomments_latest.sys.ini</language>
+		<language tag="de-DE">de-DE/de-DE.mod_jcomments_latest.ini</language>
+		<language tag="de-DE">de-DE/de-DE.mod_jcomments_latest.sys.ini</language>
+		<language tag="el-GR">el-GR/el-GR.mod_jcomments_latest.ini</language>
+		<language tag="el-GR">el-GR/el-GR.mod_jcomments_latest.sys.ini</language>
+		<language tag="en-GB">en-GB/en-GB.mod_jcomments_latest.ini</language>
+		<language tag="en-GB">en-GB/en-GB.mod_jcomments_latest.sys.ini</language>
+		<language tag="es-ES">es-ES/es-ES.mod_jcomments_latest.ini</language>
+		<language tag="es-ES">es-ES/es-ES.mod_jcomments_latest.sys.ini</language>
+		<language tag="fa-IR">fa-IR/fa-IR.mod_jcomments_latest.ini</language>
+		<language tag="fa-IR">fa-IR/fa-IR.mod_jcomments_latest.sys.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.mod_jcomments_latest.ini</language>
+		<language tag="fr-FR">fr-FR/fr-FR.mod_jcomments_latest.sys.ini</language>
+		<language tag="hu-HU">hu-HU/hu-HU.mod_jcomments_latest.ini</language>
+		<language tag="hu-HU">hu-HU/hu-HU.mod_jcomments_latest.sys.ini</language>
+		<language tag="it-IT">it-IT/it-IT.mod_jcomments_latest.ini</language>
+		<language tag="it-IT">it-IT/it-IT.mod_jcomments_latest.sys.ini</language>
+		<language tag="km-KH">km-KH/km-KH.mod_jcomments_latest.ini</language>
+		<language tag="km-KH">km-KH/km-KH.mod_jcomments_latest.sys.ini</language>
+		<language tag="lt-LT">lt-LT/lt-LT.mod_jcomments_latest.ini</language>
+		<language tag="lt-LT">lt-LT/lt-LT.mod_jcomments_latest.sys.ini</language>
+		<language tag="lv-LV">lv-LV/lv-LV.mod_jcomments_latest.ini</language>
+		<language tag="lv-LV">lv-LV/lv-LV.mod_jcomments_latest.sys.ini</language>
+		<language tag="nl-NL">nl-NL/nl-NL.mod_jcomments_latest.ini</language>
+		<language tag="nl-NL">nl-NL/nl-NL.mod_jcomments_latest.sys.ini</language>
+		<language tag="pl-PL">pl-PL/pl-PL.mod_jcomments_latest.ini</language>
+		<language tag="pl-PL">pl-PL/pl-PL.mod_jcomments_latest.sys.ini</language>
+		<language tag="pt-BR">pt-BR/pt-BR.mod_jcomments_latest.ini</language>
+		<language tag="pt-BR">pt-BR/pt-BR.mod_jcomments_latest.sys.ini</language>
+		<language tag="ro-RO">ro-RO/ro-RO.mod_jcomments_latest.ini</language>
+		<language tag="ro-RO">ro-RO/ro-RO.mod_jcomments_latest.sys.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.mod_jcomments_latest.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.mod_jcomments_latest.sys.ini</language>
+		<language tag="sk-SK">sk-SK/sk-SK.mod_jcomments_latest.ini</language>
+		<language tag="sk-SK">sk-SK/sk-SK.mod_jcomments_latest.sys.ini</language>
+		<language tag="sl-SI">sl-SI/sl-SI.mod_jcomments_latest.ini</language>
+		<language tag="sl-SI">sl-SI/sl-SI.mod_jcomments_latest.sys.ini</language>
+		<language tag="sr-RS">sr-RS/sr-RS.mod_jcomments_latest.ini</language>
+		<language tag="sr-RS">sr-RS/sr-RS.mod_jcomments_latest.sys.ini</language>
+		<language tag="sr-YU">sr-YU/sr-YU.mod_jcomments_latest.ini</language>
+		<language tag="sr-YU">sr-YU/sr-YU.mod_jcomments_latest.sys.ini</language>
+		<language tag="sv-SE">sv-SE/sv-SE.mod_jcomments_latest.ini</language>
+		<language tag="sv-SE">sv-SE/sv-SE.mod_jcomments_latest.sys.ini</language>
+		<language tag="th-TH">th-TH/th-TH.mod_jcomments_latest.ini</language>
+		<language tag="th-TH">th-TH/th-TH.mod_jcomments_latest.sys.ini</language>
+		<language tag="tr-TR">tr-TR/tr-TR.mod_jcomments_latest.ini</language>
+		<language tag="tr-TR">tr-TR/tr-TR.mod_jcomments_latest.sys.ini</language>
+		<language tag="uk-UA">uk-UA/uk-UA.mod_jcomments_latest.ini</language>
+		<language tag="uk-UA">uk-UA/uk-UA.mod_jcomments_latest.sys.ini</language>
+		<language tag="vi-VN">vi-VN/vi-VN.mod_jcomments_latest.ini</language>
+		<language tag="vi-VN">vi-VN/vi-VN.mod_jcomments_latest.sys.ini</language>
+		<language tag="zh-CN">zh-CN/zh-CN.mod_jcomments_latest.ini</language>
+		<language tag="zh-CN">zh-CN/zh-CN.mod_jcomments_latest.sys.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldpath="/modules/mod_jcomments_latest/fields">
+				<field
+					name="source"
+					type="jcommentsobjectgroup"
+					default="com_content"
+					multiple="true"
+					size="10"
+					label="MOD_JCOMMENTS_LATEST_FIELD_SOURCE_LABEL"
+					description="" />
+
+				<field
+					name="count"
+					type="text"
+					default="5"
+					label="MOD_JCOMMENTS_LATEST_FIELD_ITEMS_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_ITEMS_DESC" />
+
+				<field
+					name="interval"
+					type="list"
+					default=""
+					label="MOD_JCOMMENTS_LATEST_FIELD_INTERVAL_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_INTERVAL_DESC">
+					<option value="">MOD_JCOMMENTS_LATEST_OPTION_ALL_TIME</option>
+					<option value="1-day">MOD_JCOMMENTS_LATEST_OPTION_1_DAY</option>
+					<option value="1-week">MOD_JCOMMENTS_LATEST_OPTION_1_WEEK</option>
+					<option value="2-week">MOD_JCOMMENTS_LATEST_OPTION_2_WEEK</option>
+					<option value="1-month">MOD_JCOMMENTS_LATEST_OPTION_1_MONTH</option>
+					<option value="3-month">MOD_JCOMMENTS_LATEST_OPTION_3_MONTH</option>
+					<option value="6-month">MOD_JCOMMENTS_LATEST_OPTION_6_MONTH</option>
+					<option value="1-year">MOD_JCOMMENTS_LATEST_OPTION_1_YEAR</option>
+				</field>
+
+				<field name="comments_grouping" type="list"
+					default="none"
+					label="MOD_JCOMMENTS_LATEST_FIELD_COMMENTS_GROUPING_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_COMMENTS_GROUPING_DESC">
+					<option value="none">JNONE</option>
+					<option value="object_title">MOD_JCOMMENTS_LATEST_OPTION_OBJECT_TITLE</option>
+				</field>
+
+				<field
+					name="ordering"
+					type="list"
+					default="date"
+					label="MOD_JCOMMENTS_LATEST_FIELD_ORDERING_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_ORDERING_DESC">
+					<option value="date">MOD_JCOMMENTS_LATEST_OPTION_ORDER_BY_DATE</option>
+					<option value="vote">MOD_JCOMMENTS_LATEST_OPTION_ORDER_BY_VOTES</option>
+				</field>
+			</fieldset>
+
+			<fieldset name="display" label="MOD_JCOMMENTS_LATEST_FIELD_GROUP_DISPLAY_LABEL">
+				<field
+					name="show_comment_title"
+					type="radio"
+					default="1"
+					label="MOD_JCOMMENTS_LATEST_FIELD_COMMENT_TITLE_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_COMMENT_TITLE_DESC">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+
+				<field
+					name="show_comment_author"
+					type="radio"
+					default="1"
+					label="MOD_JCOMMENTS_LATEST_FIELD_COMMENT_AUTHOR_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_COMMENT_AUTHOR_DESC">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+
+				<field
+					name="limit_comment_text"
+					type="text"
+					size="5"
+					default="100"
+					label="MOD_JCOMMENTS_LATEST_FIELD_LIMIT_COMMENT_TEXT_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_LIMIT_COMMENT_TEXT_DESC" />
+
+				<field
+					name="readmore"
+					type="radio"
+					default="0"
+					label="MOD_JCOMMENTS_LATEST_FIELD_READMORE_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_READMORE_DESC">
+					<option	value="1">JSHOW</option>
+					<option	value="0">JHIDE</option>
+				</field>
+
+				<field name="spacer1" type="spacer" hr="true" />
+
+				<field
+					name="show_comment_date"
+					type="radio"
+					default="1"
+					label="MOD_JCOMMENTS_LATEST_FIELD_COMMENT_DATE_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_COMMENT_DATE_DESC">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+
+				<field
+					name="date_type"
+					type="list"
+					default="absolute"
+					label="MOD_JCOMMENTS_LATEST_FIELD_DATE_TYPE_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_DATE_TYPE_DESC">
+					<option value="absolute">MOD_JCOMMENTS_LATEST_OPTION_DATE_TYPE_ABSOLUTE</option>
+					<option value="relative">MOD_JCOMMENTS_LATEST_OPTION_DATE_TYPE_RELATIVE</option>
+				</field>
+
+				<field
+					name="date_format"
+					type="text"
+					default="d.m.Y H:i"
+					label="MOD_JCOMMENTS_LATEST_FIELD_DATE_FORMAT_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_DATE_FORMAT_DESC" />
+
+
+				<field name="spacer2" type="spacer" hr="true" />
+
+				<field
+					name="show_object_title"
+					type="radio"
+					default="1"
+					label="MOD_JCOMMENTS_LATEST_FIELD_OBJECT_TITLE_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_OBJECT_TITLE_DESC">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+
+				<field
+					name="link_object_title"
+					type="radio"
+					default="0"
+					label="MOD_JCOMMENTS_LATEST_FIELD_LINK_OBJECT_TITLE_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_LINK_OBJECT_TITLE_DESC">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+
+				<field
+					name="item_heading"
+					type="list"
+					default="4"
+					label="MOD_JCOMMENTS_LATEST_OBJECT_TITLE_HEADING_LABEL"
+					description="MOD_JCOMMENTS_LATEST_OBJECT_TITLE_HEADING_DESC">
+					<option value="1">H1</option>
+					<option value="2">H2</option>
+					<option value="3">H3</option>
+					<option value="4">H4</option>
+					<option value="5">H5</option>
+					<option value="6">H6</option>
+				</field>
+
+				<field name="spacer3" type="spacer" hr="true" />
+
+				<field
+					name="show_avatar"
+					type="radio"
+					default="0"
+					label="MOD_JCOMMENTS_LATEST_FIELD_AVATAR_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_AVATAR_DESC">
+					<option value="1">JSHOW</option>
+					<option value="0">JHIDE</option>
+				</field>
+
+				<field
+					name="show_smiles"
+					type="list"
+					default="0"
+					label="MOD_JCOMMENTS_LATEST_FIELD_SMILES_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_SMILES_DESC">
+					<option value="0">MOD_JCOMMENTS_LATEST_OPTION_SMILES_TEXT</option>
+					<option value="1">MOD_JCOMMENTS_LATEST_OPTION_SMILES_IMAGES</option>
+					<option value="2">MOD_JCOMMENTS_LATEST_OPTION_SMILES_STRIP</option>
+				</field>
+			</fieldset>
+
+			<fieldset name="filtering" label="MOD_JCOMMENTS_LATEST_FIELD_GROUP_FILTERING_LABEL">
+				<field
+					name="catid"
+					type="category"
+					extension="com_content"
+					multiple="true"
+					default=""
+					size="10"
+					label="MOD_JCOMMENTS_LATEST_FIELD_CATEGORY_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_CATEGORY_DESC" >
+					<option value="">MOD_JCOMMENTS_LATEST_OPTION_ALL_CATEGORIES</option>
+				</field>
+			</fieldset>
+
+			<fieldset name="advanced">
+				<field
+					name="useCSS"
+					type="radio"
+					default="1"
+					label="MOD_JCOMMENTS_LATEST_FIELD_CSS_LABEL"
+					description="MOD_JCOMMENTS_LATEST_FIELD_CSS_DESC">
+					<option value="1">JYES</option>
+					<option value="0">JNO</option>
+				</field>
+
+				<field
+					name="layout"
+					type="modulelayout"
+					label="JFIELD_ALT_LAYOUT_LABEL"
+					description="JFIELD_ALT_MODULE_LAYOUT_DESC" />
+
+				<field
+					name="moduleclass_sfx"
+					type="text"
+					label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+					description="COM_MODULES_FIELD_MODULECLASS_SFX_DESC" />
+
+				<field
+					name="cache"
+					type="list"
+					default="1"
+					label="COM_MODULES_FIELD_CACHING_LABEL"
+					description="COM_MODULES_FIELD_CACHING_DESC">
+					<option value="1">JGLOBAL_USE_GLOBAL</option>
+					<option value="0">COM_MODULES_FIELD_VALUE_NOCACHING</option>
+				</field>
+
+				<field
+					name="cache_time"
+					type="text"
+					default="900"
+					label="COM_MODULES_FIELD_CACHE_TIME_LABEL"
+					description="COM_MODULES_FIELD_CACHE_TIME_DESC" />
+
+				<field
+					name="cachemode"
+					type="hidden"
+					default="itemid">
+					<option value="itemid"></option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+	<updateservers>
+		<server type="extension" priority="1" name="JComments Latest">http://olaverre.free.fr/downloads/extensions/updates/jcomments-latest.xml</server>
+	</updateservers>
+</extension>

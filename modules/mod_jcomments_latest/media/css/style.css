@@ -1,0 +1,91 @@
+ul.jcomments-latest {
+	list-style: none !important;
+	list-style-image: none !important;
+	padding: 0;
+}
+
+ul.jcomments-latest li ul {
+	list-style: none !important;
+	list-style-image: none !important;
+	margin-top: 10px !important;
+	margin-bottom: 10px !important;
+	padding: 0 !important;
+}
+
+ul.jcomments-latest li {
+	background-image: none;
+	margin: 0;
+	display: block;
+	overflow: hidden;
+}
+
+ul.jcomments-latest img {
+	width: 32px;
+	height: 32px;
+	margin: 0 5px 5px 0;
+	float: left;
+}
+
+ul.jcomments-latest .object-title {
+	text-decoration: none;
+}
+
+ul.jcomments-latest .title {
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+}
+
+ul.jcomments-latest .author {
+	color: #999;
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+
+ul.jcomments-latest .date {
+	color: #999;
+	font-size: 12px;
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+
+ul.jcomments-latest .comment {
+	margin: 0;
+	padding: 0;
+	clear: both;
+}
+
+ul.jcomments-latest .comment img {
+	width: auto;
+	height: auto;
+	float: none;
+}
+
+ul.jcomments-latest .comment-separator {
+	clear: both;
+	display: block;
+	margin: 5px 0;
+	height: 1px;
+	padding: 0;
+}
+
+ul.jcomments-latest .rounded {
+	padding: 4px;
+	border: 1px solid #ccc;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+}
+
+ul.jcomments-latest .avatar-indent {
+/*
+	margin-left: 36px !important;
+*/
+}
+
+ul.jcomments-latest .jcomments-latest-readmore {
+	margin: 0;
+	text-align: right;
+}
