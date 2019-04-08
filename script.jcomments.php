@@ -46,6 +46,7 @@ class com_jcommentsInstallerScript
 		$messages['user'] = JText::_('A_INSTALL_PLUGIN_USER');
 		$messages['editors-xtd'] = JText::_('A_INSTALL_PLUGIN_EDITORS_XTD');
 		$messages['mod_jcomments_latest'] = JText::_('A_INSTALL_MODULE_LATEST');
+		$messages['mod_jcomments_latest_backend'] = JText::_('A_INSTALL_MODULE_LATEST_BACKEND');
 
 		$data = new stdClass;
 		$data->title = JText::_('A_INSTALL_LOG');
@@ -263,6 +264,7 @@ class com_jcommentsInstallerScript
 		$messages['system'] = JText::_('A_UNINSTALL_PLUGIN_SYSTEM');
 		$messages['editors-xtd'] = JText::_('A_UNINSTALL_PLUGIN_EDITORS_XTD');
 		$messages['mod_jcomments_latest'] = JText::_('A_UNINSTALL_MODULE_LATEST');
+		$messages['mod_jcomments_latest_backend'] = JText::_('A_UNINSTALL_MODULE_LATEST_BACKEND');
 
 		$data = new stdClass;
 		$data->title = JText::_('A_UNINSTALL_LOG');
@@ -543,7 +545,7 @@ class com_jcommentsInstallerScript
 		$query
 			->select(array('a.*', 'COUNT(DISTINCT ' . $db->quoteName('b.id') . ') AS level'))
 			->from($db->quoteName('#__usergroups','a'))
-			->join('LEFT', $db->quoteName('#__usergroups','b') . ' ON ' . 
+			->join('LEFT', $db->quoteName('#__usergroups','b') . ' ON ' .
 					$db->quoteName('a.lft') . ' > ' . $db->quoteName('b.lft') . ' AND ' .
 					$db->quoteName('a.rgt') . ' < ' . $db->quoteName('b.rgt'))
 			->group($db->quoteName(array('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')))
