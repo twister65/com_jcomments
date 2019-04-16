@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="jcomments" version="2.5" method="upgrade">
+	<name>JComments - Avatar</name>
+	<creationDate>04/08/2014</creationDate>
+	<author>smart</author>
+	<copyright>(c) 2007-2014 JoomlaTune.ru</copyright>
+	<authorEmail>smart@joomlatune.ru</authorEmail>
+	<authorUrl>http://www.joomlatune.ru</authorUrl>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<version>4.1.8</version>
+	<description>PLG_JCOMMENTS_AVATAR_XML_DESCRIPTION</description>
+	<files>
+		<filename plugin="avatar">avatar.php</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_jcomments_avatar.ini</language>
+		<language tag="fr-FR">language/fr-FR/fr-FR.plg_jcomments_avatar.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field
+					name="avatar_type"
+					type="list"
+					default="gravatar"
+					label="PLG_JCOMMENTS_AVATAR_FIELD_AVATAR_SOURCE_LABEL"
+					description="PLG_JCOMMENTS_AVATAR_FIELD_AVATAR_SOURCE_DESC">
+
+					<option value="aup">AlphaUserPoints</option>
+					<option value="cb">CommunityBuilder</option>
+					<option value="contacts">Contacts</option>
+					<option value="discussions">Discussions</option>
+					<option value="easyblog">EasyBlog</option>
+					<option value="easydiscuss">EasyDiscuss</option>
+					<option value="easyprofile">EasyProfile</option>
+					<option value="gravatar">Gravatar</option>
+					<option value="jomsocial">JomSocial</option>
+					<option value="joobb">JooBB</option>
+					<option value="k2">K2</option>
+					<option value="kunena">Kunena</option>
+					<option value="phocagallery">PhocaGallery</option>
+					<option value="slogin">Social Login</option>
+				</field>
+
+				<field
+					name="avatar_default_avatar"
+					type="list"
+					default="default"
+					label="PLG_JCOMMENTS_AVATAR_FIELD_DEFAULT_AVATAR_LABEL"
+					description="PLG_JCOMMENTS_AVATAR_FIELD_DEFAULT_AVATAR_DESC">
+
+					<option value="default">PLG_JCOMMENTS_AVATAR_FIELD_VALUE_DEFAULT_IMAGE</option>
+					<option value="custom">PLG_JCOMMENTS_AVATAR_FIELD_VALUE_CUSTOM_IMAGE</option>
+					<option value="gravatar">PLG_JCOMMENTS_AVATAR_FIELD_VALUE_GRAVATAR</option>
+				</field>
+
+				<field
+					name="avatar_custom_default_avatar"
+					type="media"
+					label="PLG_JCOMMENTS_AVATAR_FIELD_CUSTOM_DEFAULT_AVATAR_LABEL"
+					description="PLG_JCOMMENTS_AVATAR_FIELD_CUSTOM_DEFAULT_AVATAR_DESC" />
+
+				<field
+					name="gravatar_default"
+					type="list"
+					label="PLG_JCOMMENTS_AVATAR_FIELD_GRAVATAR_DEFAULT_LABEL"
+					description="PLG_JCOMMENTS_AVATAR_FIELD_GRAVATAR_DEFAULT_DESC"
+					default="mm">
+					<option value="mm">Mystery-man</option>
+					<option value="identicon">Geometric pattern</option>
+					<option value="monsterid">Monster</option>
+					<option value="wavatar">Faces</option>
+					<option value="retro">8-bit arcade-style</option>
+				</field>
+
+				<field
+					name="avatar_link"
+					type="radio"
+					default="0"
+					label="PLG_JCOMMENTS_AVATAR_FIELD_PROFILE_LINK_LABEL"
+					description="PLG_JCOMMENTS_AVATAR_FIELD_PROFILE_LINK_DESC">
+
+					<option value="0">JNO</option>
+					<option value="1">JYES</option>
+				</field>
+
+				<field
+					name="avatar_link_target"
+					type="list"
+					default="_blank"
+					label="PLG_JCOMMENTS_AVATAR_FIELD_TARGET_LABEL"
+					description="PLG_JCOMMENTS_AVATAR_FIELD_TARGET_DESC">
+
+					<option value="_blank">JBROWSERTARGET_NEW</option>
+					<option value="_self">JBROWSERTARGET_PARENT</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+	<updateservers>
+		<server type="extension" priority="1" name="JComments Avatar">http://www.joomlatune.ru/updates/plg-jcomments-avatar.xml</server>
+	</updateservers>
+</extension>

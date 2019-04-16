@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
 	<name>JComments</name>
-	<creationDate>07/04/2019</creationDate>
+	<creationDate>16/04/2019</creationDate>
 	<author>smart</author>
 	<authorEmail>smart@joomlatune.ru</authorEmail>
 	<authorUrl>http://www.joomlatune.ru</authorUrl>
 	<copyright>Copyright 2006-2019 JoomlaTune.ru All rights reserved!</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
-	<version>3.0.7.2</version>
+	<version>3.0.7.3</version>
 	<description><![CDATA[JComments lets your users comment on content items.]]></description>
 
 	<scriptfile>script.jcomments.php</scriptfile>
@@ -114,8 +114,8 @@
 		<language tag="pt-BR">pt-BR.plg_search_jcomments.ini</language>
 		<language tag="ro-RO">ro-RO.com_jcomments.ini</language>
 		<language tag="ro-RO">ro-RO.plg_search_jcomments.ini</language>
-		<language tag="ru-RU">ru-RU.com_jcomments.ini</language>
-		<language tag="ru-RU">ru-RU.plg_search_jcomments.ini</language>
+		<language tag="fr-FR">fr-FR.com_jcomments.ini</language>
+		<language tag="fr-FR">fr-FR.plg_search_jcomments.ini</language>
 		<language tag="sk-SK">sk-SK.com_jcomments.ini</language>
 		<language tag="sk-SK">sk-SK.plg_search_jcomments.ini</language>
 		<language tag="sl-SI">sl-SI.com_jcomments.ini</language>
@@ -184,26 +184,27 @@
 			<language tag="en-GB">en-GB/en-GB.plg_user_jcomments.ini</language>
 			<language tag="en-GB">en-GB/en-GB.plg_user_jcomments.sys.ini</language>
 
-			<language tag="ru-RU">ru-RU/ru-RU.com_jcomments.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.com_jcomments.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_content_jcomments.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_content_jcomments.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_editors-xtd_jcommentsoff.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_editors-xtd_jcommentsoff.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_editors-xtd_jcommentson.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_editors-xtd_jcommentson.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_quickicon_jcomments.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_quickicon_jcomments.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_search_jcomments.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_search_jcomments.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_system_jcomments.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_system_jcomments.sys.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_user_jcomments.ini</language>
-			<language tag="ru-RU">ru-RU/ru-RU.plg_user_jcomments.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_jcomments.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.com_jcomments.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_content_jcomments.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_content_jcomments.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_editors-xtd_jcommentsoff.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_editors-xtd_jcommentsoff.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_editors-xtd_jcommentson.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_editors-xtd_jcommentson.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_quickicon_jcomments.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_quickicon_jcomments.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_search_jcomments.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_search_jcomments.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_system_jcomments.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_system_jcomments.sys.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_user_jcomments.ini</language>
+			<language tag="fr-FR">fr-FR/fr-FR.plg_user_jcomments.sys.ini</language>
 		</languages>
 	</administration>
 
 	<plugins>
+		<plugin plugin="avatar" group="jcomments" />
 		<plugin plugin="jcomments" group="content" />
 		<plugin plugin="jcommentson" group="editors-xtd" />
 		<plugin plugin="jcommentsoff" group="editors-xtd" />

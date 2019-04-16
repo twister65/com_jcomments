@@ -78,10 +78,10 @@ class com_jcommentsInstallerScript
 			{
 				$installer = new JInstaller;
 				$result = $installer->install($path);
-			}
 
-			$data->messages[] = array('text' => $messages[$name], 'result' => $result);
-			$data->modules[] = array('name' => $name, 'result' => $result);
+				$data->messages[] = array('text' => $messages[$name], 'result' => $result);
+				$data->modules[] = array('name' => $name, 'result' => $result);
+			}
 		}
 
 		$plugins = $manifest->xpath('plugins/plugin');
@@ -106,6 +106,13 @@ class com_jcommentsInstallerScript
 			{
 				$installer = new JInstaller;
 				$result = $installer->install($path);
+
+				if (isset($messages[$group])) {
+					$data->messages[] = array('text' => $messages[$group], 'result' => $result);
+					unset($messages[$group]);
+				}
+
+				$data->plugins[] = array('name' => $name, 'group' => $group, 'result' => $result);
 			}
 
 			$query = $db->getQuery(true);
@@ -117,13 +124,6 @@ class com_jcommentsInstallerScript
 				->where($db->quoteName('folder') . ' = ' . $db->Quote($group));
 			$db->setQuery($query);
 			$db->execute();
-
-			if (isset($messages[$group])) {
-				$data->messages[] = array('text' => $messages[$group], 'result' => $result);
-				unset($messages[$group]);
-			}
-
-			$data->plugins[] = array('name' => $name, 'group' => $group, 'result' => $result);
 		}
 
 		// Extract plugins for integration with 3rd party extensions
