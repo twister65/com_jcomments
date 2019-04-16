@@ -40,10 +40,12 @@ class com_jcommentsInstallerScript
 		$language->load('com_jcomments', JPATH_ADMINISTRATOR, null, true);
 
 		$messages = array();
+		$messages['jcomments'] = JText::_('A_INSTALL_PLUGIN_AVATAR');
 		$messages['content'] = JText::_('A_INSTALL_PLUGIN_CONTENT');
 		$messages['search'] = JText::_('A_INSTALL_PLUGIN_SEARCH');
 		$messages['system'] = JText::_('A_INSTALL_PLUGIN_SYSTEM');
 		$messages['user'] = JText::_('A_INSTALL_PLUGIN_USER');
+		$messages['quickicon'] = JText::_('A_INSTALL_PLUGIN_QUICKICON');
 		$messages['editors-xtd'] = JText::_('A_INSTALL_PLUGIN_EDITORS_XTD');
 		$messages['mod_jcomments_latest'] = JText::_('A_INSTALL_MODULE_LATEST');
 		$messages['mod_jcomments_latest_backend'] = JText::_('A_INSTALL_MODULE_LATEST_BACKEND');
@@ -259,9 +261,12 @@ class com_jcommentsInstallerScript
 		$language->load('com_jcomments', JPATH_ADMINISTRATOR, null, true);
 
 		$messages = array();
+		$messages['jcomments'] = JText::_('A_UNINSTALL_PLUGIN_AVATAR');
 		$messages['content'] = JText::_('A_UNINSTALL_PLUGIN_CONTENT');
 		$messages['search'] = JText::_('A_UNINSTALL_PLUGIN_SEARCH');
 		$messages['system'] = JText::_('A_UNINSTALL_PLUGIN_SYSTEM');
+		$messages['user'] = JText::_('A_UNINSTALL_PLUGIN_USER');
+		$messages['quickicon'] = JText::_('A_UNINSTALL_PLUGIN_QUICKICON');
 		$messages['editors-xtd'] = JText::_('A_UNINSTALL_PLUGIN_EDITORS_XTD');
 		$messages['mod_jcomments_latest'] = JText::_('A_UNINSTALL_MODULE_LATEST');
 		$messages['mod_jcomments_latest_backend'] = JText::_('A_UNINSTALL_MODULE_LATEST_BACKEND');
