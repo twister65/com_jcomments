@@ -142,12 +142,12 @@ class JCommentsModelSettings extends JCommentsModelForm
 			->select('COUNT(DISTINCT ' . $this->_db->quoteName('b.id') . ') AS level')
 			->select($this->_db->quoteName('a.parent_id'))
 			->from($this->_db->quoteName('#__usergroups', 'a'))
-			->leftJoin($this->_db->quoteName('#__usergroups', 'b') . ' ON (' . 
+			->leftJoin($this->_db->quoteName('#__usergroups', 'b') . ' ON (' .
 				   $this->_db->quoteName('a.lft') . ' > ' . $this->_db->quoteName('b.lft') . ' AND ' .
 				   $this->_db->quoteName('a.rgt') . ' < ' . $this->_db->quoteName('b.rgt') . ')')
 			->group($this->_db->quoteName(array('a.id', 'a.title', 'a.lft', 'a.rgt', 'a.parent_id')))
 			->order($this->_db->quoteName('a.lft') . ' ASC');
-		 
+
 		$this->_db->setQuery($query);
 		$options = $this->_db->loadObjectList();
 
@@ -218,7 +218,13 @@ class JCommentsModelSettings extends JCommentsModelForm
 					}
 				}
 			}
-			
+
+			//If comment form is hidden, then the captcha engine is kcaptcha
+			if (($data['form_show'] == '0') || ($data['form_show'] == '2'))
+			{
+				$data['captcha_engine'] = 'kcaptcha';
+			}
+
 			if ($data['captcha_engine'] != 'kcaptcha') {
 				$plugin = $data['captcha_engine'] == 'joomladefault' ? JFactory::getConfig()->get('captcha') : $data['captcha_engine'];
 				if (($captcha = JCaptcha::getInstance($plugin, array('namespace' => 'jcomments'))) == null) {
